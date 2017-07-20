@@ -1,93 +1,104 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
+﻿using ChitoseV3.Modules;
+using ChitoseV3.Objects;
 using Discord;
 using Discord.WebSocket;
-using Discord.Commands;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
+
 namespace ChitoseV3
 {
-    public class Chitose
+    public class Chitose : IDisposable
     {
-        private static readonly string token = Properties.Settings.Default.Token;
-        private readonly DiscordSocketClient client;
-        private readonly CommandService commands;
-        private readonly IServiceProvider services; 
+        public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
+        public static readonly string MALPassword = Properties.Settings.Default.MALPassword;
+        public static readonly string OsuApiKey = Properties.Settings.Default.OsuApiKey;
+        public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
+        private static string token = Properties.Settings.Default.Token;
 
-        public Chitose()
+        private DiscordSocketClient client;
+
+        private Commands commands;
+        private DiscordSocketConfig config;
+
+        public Chitose() => StartAsync().GetAwaiter().GetResult();
+
+        public void Dispose()
         {
-            client = new DiscordSocketClient();
-            commands = new CommandService();
-
-            services = new ServiceCollection()
-                .BuildServiceProvider();
-
-            ConnectAsync(client).GetAwaiter().GetResult(); 
+            throw new NotImplementedException();
         }
 
-        private async Task ConnectAsync(DiscordSocketClient client)
+        private int GetUserCount(DiscordSocketClient client)
         {
-            client.Log += Logger;
+            int users = 0;
 
-            await InstallCommands();
+            foreach (IGuild guild in client.Guilds)
+            {
+                users = users + guild.GetUsersAsync().GetAwaiter().GetResult().Count;
+            }
 
-            await client.LoginAsync(TokenType.Bot, token);
-            await client.StartAsync();
+            return users;
+        }
 
-            await Task.Delay(-1); 
+        private async Task InstallCommands()
+        {
+            commands = new Commands(client);
+
+            await commands.Install();
         }
 
         private Task Logger(LogMessage e)
         {
-            var original = Console.ForegroundColor;
             switch (e.Severity)
             {
                 case LogSeverity.Critical:
                 case LogSeverity.Error:
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
+
                 case LogSeverity.Warning:
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     break;
+
                 case LogSeverity.Info:
                     Console.ForegroundColor = ConsoleColor.White;
                     break;
+
                 case LogSeverity.Verbose:
                 case LogSeverity.Debug:
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     break;
             }
             Console.WriteLine($"{DateTime.Now,-19} [{e.Severity,8}] {e.Source}: {e.Message}");
-            Console.ForegroundColor = original;
+            Console.ForegroundColor = ConsoleColor.White;
 
             return Task.CompletedTask;
         }
 
-        private async Task CommandHandler(SocketMessage messageParam)
+        private async Task StartAsync()
         {
-            var message = messageParam as SocketUserMessage;
+            config = new DiscordSocketConfig()
+            {
+                DefaultRetryMode = RetryMode.AlwaysRetry,
+                LogLevel = LogSeverity.Info
+            };
+            client = new DiscordSocketClient(config);
 
-            if (message == null) return;
+            client.Log += Logger;
 
-            int argPos = 0;
+            await client.LoginAsync(TokenType.Bot, token);
+            await client.StartAsync();   
 
-            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(client.CurrentUser, ref argPos))) return;
+            client.Ready += () =>
+            {
+                Console.WriteLine("Chitose has now connected to:");
+                Console.WriteLine(string.Join(", ", client.Guilds));
+                int users = GetUserCount(client);
+                client.SetGameAsync($"Serving {users} bakas");
+                InstallCommands().GetAwaiter();
+                return Task.CompletedTask;
+            };
 
-            var context = new CommandContext(client, message);
-            var result = await commands.ExecuteAsync(context, argPos, services);
-
-            if (!result.IsSuccess)
-                await context.Channel.SendMessageAsync(result.ErrorReason); 
-        }
-
-        private async Task InstallCommands()
-        {
-            client.MessageReceived += CommandHandler;
-
-            await commands.AddModuleAsync<ModuleBase>(); 
+            await Task.Delay(-1);
         }
     }
 }

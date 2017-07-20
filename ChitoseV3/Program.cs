@@ -1,16 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChitoseV3
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Chitose bot = new Chitose(); 
+            ConfigConsole(); 
+
+            Chitose bot = new Chitose();
+        }
+
+        private static void ConfigConsole()
+        {
+            Console.Title = "Chitose";
+            Console.ForegroundColor = ConsoleColor.White; 
         }
     }
 }
