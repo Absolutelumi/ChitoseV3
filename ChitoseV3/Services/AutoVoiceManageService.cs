@@ -23,10 +23,17 @@ namespace ChitoseV3.Services
                 Guilds.Add(guild); 
             }
 
-            client.UserVoiceStateUpdated += async (_, b, a) =>
+            client.UserVoiceStateUpdated += async (_, previous, current) =>
             {
-                if (Guilds.Contains(b.VoiceChannel.Guild.Id.ToString())) await UpdateVC(b.VoiceChannel); 
-                if (Guilds.Contains(a.VoiceChannel.Guild.Id.ToString())) await UpdateVC(a.VoiceChannel);
+                if (Guilds.Contains(previous.VoiceChannel.Guild.Id.ToString())) await UpdateVC(previous.VoiceChannel); 
+                if (Guilds.Contains(current.VoiceChannel.Guild.Id.ToString())) await UpdateVC(current.VoiceChannel);
+            };
+
+            client.GuildMemberUpdated += async (oldState, newState) =>
+            {
+                if (oldState.Game?.Name == newState.Game?.Name) return;
+                if (newState.VoiceChannel == null) return;
+                await UpdateVC(newState.VoiceChannel); 
             };
         }
 

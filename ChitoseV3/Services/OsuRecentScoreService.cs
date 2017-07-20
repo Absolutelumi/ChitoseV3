@@ -27,9 +27,9 @@ namespace ChitoseV3.Services
             Client = client;
 
             LatestUpdate = new Dictionary<string, DateTime>();
-            GetUsers(); 
+            GetUsers();
 
-            OsuChannel = (IMessageChannel)Client.GetGuild(220673514720591872).GetChannel(316390541162053634);
+            OsuChannel = Client.GetGuild(220673514720591872).GetChannel(316390541162053634) as IMessageChannel; 
 
             Timer timer = new Timer(10000);
             timer.AutoReset = true;
@@ -37,7 +37,7 @@ namespace ChitoseV3.Services
             timer.Start(); 
         }
 
-        public async Task<String> Follow(string user)
+        public async Task<string> Follow(string user)
         {
             User osuUser = await OsuApi.GetUser.WithUser(user).Result();
             
@@ -47,7 +47,7 @@ namespace ChitoseV3.Services
 
             else UpdateUser(osuUser.Username, new DateTime(0));
 
-            return $"{osuUser.Username} has been added! Any ranked score {osuUser.Username} sets will show up in #{OsuChannel.Name}"; 
+            return $"{osuUser.Username} has been added! Any ranked score {osuUser.Username} sets will show up in {MentionUtils.MentionChannel(OsuChannel.Id)}"; 
         }
 
         public async Task<String> Unfollow(string user)
