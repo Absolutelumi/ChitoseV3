@@ -12,11 +12,13 @@ namespace ChitoseV3.Services
 {
     public class AutoVoiceManageService
     {
-        public Collection<string> Guilds = new Collection<string>(); 
+        public Collection<string> Guilds = new Collection<string>();
+
+        private readonly string VoicePath = Chitose.ConfigPath + "AutoVoiceGuilds.txt"; 
 
         public AutoVoiceManageService(DiscordSocketClient client)
         {
-            foreach (var guild in File.ReadAllLines("H:\\Projects\\Bot\\AutoVoiceGuilds.txt"))
+            foreach (var guild in File.ReadAllLines(VoicePath))
             {
                 Guilds.Add(guild); 
             }
@@ -30,7 +32,7 @@ namespace ChitoseV3.Services
 
         public void AddGuild(IGuild guild)
         {
-            using (FileStream stream = File.Open("H:\\Projects\\Bot\\AutoVoiceGuilds.txt", FileMode.Truncate, FileAccess.Write))
+            using (FileStream stream = File.Open(VoicePath, FileMode.Truncate, FileAccess.Write))
             using (StreamWriter streamWriter = new StreamWriter(stream))
             {
                 streamWriter.WriteLine(guild.Id.ToString());

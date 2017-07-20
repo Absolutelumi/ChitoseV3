@@ -57,6 +57,12 @@ namespace ChitoseV3.Modules
             await ReplyAsync(Context.Guild.Id.ToString()); 
         }
 
+        [Command("GetChannelId"), Summary("Gets text channel id")]
+        public async Task GetChannelId()
+        {
+            await ReplyAsync(Context.Channel.Id.ToString()); 
+        }
+
         [Command("getav"), Summary("Embedded message test")]
         public async Task GetAv()
         {

@@ -1,5 +1,4 @@
-﻿using ChitoseV3.Modules;
-using ChitoseV3.Objects;
+﻿using ChitoseV3.Objects; 
 using Discord;
 using Discord.WebSocket;
 using System;
@@ -10,10 +9,7 @@ namespace ChitoseV3
     public class Chitose : IDisposable
     {
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
-        public static readonly string MALPassword = Properties.Settings.Default.MALPassword;
-        public static readonly string OsuApiKey = Properties.Settings.Default.OsuApiKey;
         public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
-        private static string token = Properties.Settings.Default.Token;
 
         private DiscordSocketClient client;
 
@@ -85,7 +81,7 @@ namespace ChitoseV3
 
             client.Log += Logger;
 
-            await client.LoginAsync(TokenType.Bot, token);
+            await client.LoginAsync(TokenType.Bot, Keys.DiscordToken);
             await client.StartAsync();   
 
             client.Ready += () =>

@@ -23,12 +23,12 @@ namespace ChitoseV3.Objects
             services = new ServiceCollection()
                 .AddSingleton(client)
                 .AddSingleton(new AnnounceService())
-                .AddSingleton(new OsuRecentScoreService())
+                .AddSingleton(new OsuRecentScoreService(client))
                 .AddSingleton(new AdminService())
                 .AddSingleton(new AutoVoiceManageService(client))
                 .BuildServiceProvider();
 
-            commands = new CommandService(); 
+            commands = new CommandService();
         }
 
         public async Task Handle(SocketMessage messageParam)

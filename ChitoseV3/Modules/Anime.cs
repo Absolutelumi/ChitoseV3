@@ -1,4 +1,5 @@
-﻿using ChitoseV3.Services;
+﻿using ChitoseV3.Objects;
+using ChitoseV3.Services;
 using Discord;
 using Discord.Commands;
 using System;
@@ -14,7 +15,7 @@ namespace ChitoseV3.Modules
         [Command("anime"), Summary("Find anime on MAL and returns information")]
         public async Task GetAnime([Remainder, Summary("Title of anime in which to search for")] string animeTitle)
         {
-            Mal.AnimeResult animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Chitose.MALPassword);
+            Mal.AnimeResult animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Keys.MalPassword);
             string description = TagMatcher.Replace(animeResult.synopsis, string.Empty);
             await Context.Channel.SendFileAsync(Extensions.GetPicture(new Uri(animeResult.image)));
             await ReplyAsync($"**{animeResult.title}** \n ```{description}```");
@@ -23,7 +24,7 @@ namespace ChitoseV3.Modules
         [Command("animetest"), Summary("Find anime on MAL and returns information")]
         public async Task GetEmbedAnime([Remainder, Summary("Title of anime in which to search for")] string animeTitle)
         {
-            Mal.AnimeResult animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Chitose.MALPassword);
+            Mal.AnimeResult animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Keys.MalPassword);
             string description = TagMatcher.Replace(animeResult.synopsis, string.Empty);
             Embed msg = new EmbedBuilder()
                 .WithImageUrl(animeResult.image)

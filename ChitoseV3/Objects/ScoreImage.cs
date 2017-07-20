@@ -1,14 +1,14 @@
-﻿using ChitoseV3;
-using ImageProcessor;
-using OsuApi.Model;
+﻿using OsuApi.Model;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using ImageProcessor;
 
-namespace ChitoseV2.Framework
+namespace ChitoseV3.Objects
 {
-    internal class OsuScoreImage
+    public class ScoreImage
     {
         private const int AvatarSize = 128;
 
@@ -29,7 +29,7 @@ namespace ChitoseV2.Framework
         private static Pen SilverPen = new Pen(Color.Silver, StrokeWidth * 2);
         private static Pen WhitePen = new Pen(Color.White, StrokeWidth * 2);
 
-        static OsuScoreImage()
+        static ScoreImage()
         {
             WhitePen.LineJoin = LineJoin.Round;
         }
@@ -141,7 +141,7 @@ namespace ChitoseV2.Framework
             StringFormat rankFormat = new StringFormat();
             rankFormat.Alignment = StringAlignment.Far;
             rankPath.AddString(rank, rankFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 128 / 72, new Point(900, 60), rankFormat);
-            if (score.Rank == Rank.SH || score.Rank == Rank.SX)
+            if (score.Rank == Rank.SH || score.Rank == Rank.SX || score.Rank == Rank.XH)
             {
                 graphics.DrawPath(PinkPen, rankPath);
                 graphics.FillPath(SilverBrush, rankPath);
@@ -243,3 +243,4 @@ namespace ChitoseV2.Framework
         }
     }
 }
+
