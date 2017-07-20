@@ -14,30 +14,27 @@ namespace ChitoseV3.Services
     {
         public Collection<string> Guilds = new Collection<string>(); 
 
-        public AutoVoiceManageService(IDiscordClient client)
+        public AutoVoiceManageService(DiscordSocketClient client)
         {
             foreach (var guild in File.ReadAllLines("H:\\Projects\\Bot\\AutoVoiceGuilds.txt"))
             {
                 Guilds.Add(guild); 
             }
 
-            foreach (var guildId in Guilds)
+            client.UserVoiceStateUpdated += async (_, b, a) =>
             {
-                IGuild guild = client.GetGuildAsync(ulong.Parse(guildId)).Result;
-                Timer timer = new Timer(1000);
-                timer.AutoReset = true;
-                timer.Elapsed += (_,__) => UpdateVC(guild).GetAwaiter(); 
-            }
+                if (Guilds.Contains(b.VoiceChannel.Guild.Id.ToString())) await UpdateVC(b.VoiceChannel); 
+                if (Guilds.Contains(a.VoiceChannel.Guild.Id.ToString())) await UpdateVC(a.VoiceChannel);
+            };
         }
 
         public void AddGuild(IGuild guild)
         {
-            StreamWriter streamWriter;
-
             using (FileStream stream = File.Open("H:\\Projects\\Bot\\AutoVoiceGuilds.txt", FileMode.Truncate, FileAccess.Write))
+            using (StreamWriter streamWriter = new StreamWriter(stream))
             {
-                streamWriter = new StreamWriter(stream);
                 streamWriter.WriteLine(guild.Id.ToString());
+                streamWriter.Close();
             }
         }
 
@@ -64,33 +61,30 @@ namespace ChitoseV3.Services
             await guild.ModifyAsync(modifyAFK);
         }
 
-        public async Task UpdateVC(IGuild guild)
+        public async Task UpdateVC(IVoiceChannel VC)
         {
-            foreach (IVoiceChannel VC in await guild.GetVoiceChannelsAsync())
+            if (VC.Id == VC.Guild.AFKChannelId || VC.Name == "Watchin") return;
+
+            IReadOnlyCollection<IUser> users = await VC.GetUsersAsync().First();
+
+            if (users.Count == 0 && VC.Name == "Lobby") return; 
+
+            string newName = users.Count == 0 ? "Lobby" : users.First().Game?.Name ?? "Lobby";
+
+            if (newName != "Lobby")
             {
-                if (VC.Id == guild.AFKChannelId || VC.Name == "Watchin") continue;
-
-                IReadOnlyCollection<IUser> users = await VC.GetUsersAsync().First();
-
-                if (users.Count == 0 && VC.Name == "Lobby") continue;
-
-                string newName = users.Count == 0 ? "Lobby" : users.First().Game?.Name ?? "Lobby";
-
-                if (newName != "Lobby")
+                foreach (IGuildUser user in users)
                 {
-                    foreach (IGuildUser user in users)
-                    {
-                        if (user.IsBot) continue;
-                        if (user.Game.Value.Name != newName) newName = "Lobby";
-                    }
+                    if (user.IsBot) continue;
+                    if (user.Game.Value.Name != newName) newName = "Lobby";
                 }
-
-                void ChangeVCName(VoiceChannelProperties properties) => properties.Name = newName;
-
-                Action<VoiceChannelProperties> modifyVC = new Action<VoiceChannelProperties>(ChangeVCName);
-
-                await VC.ModifyAsync(modifyVC);
             }
+
+            void ChangeVCName(VoiceChannelProperties properties) => properties.Name = newName;
+
+            Action<VoiceChannelProperties> modifyVC = new Action<VoiceChannelProperties>(ChangeVCName);
+
+            await VC.ModifyAsync(modifyVC);
         }
     }
 }

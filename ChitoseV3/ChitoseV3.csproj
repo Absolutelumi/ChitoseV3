@@ -157,7 +157,6 @@
     <Compile Include="Chitose.cs" />
     <Compile Include="Modules\AdminCommandVote.cs" />
     <Compile Include="Modules\Anime.cs" />
-    <Compile Include="Modules\Announcements.cs" />
     <Compile Include="Modules\AutoManageVoiceChan.cs" />
     <Compile Include="Modules\OsuScoreUpload.cs" />
     <Compile Include="Modules\Support.cs" />

@@ -30,7 +30,6 @@ namespace ChitoseV3.Modules
             VoiceServ.AddGuild(Context.Guild); 
 
             await VoiceServ.RemoveAndAddDefaultVC(Context.Guild);
-            await VoiceServ.UpdateVC(Context.Guild); 
 
             await ReplyAsync("All done～"); 
         }
