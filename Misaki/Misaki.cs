@@ -86,7 +86,7 @@ namespace Misaki
 
             client.Ready += () =>
             {
-                Console.WriteLine("Chitose has now connected to:");
+                Console.WriteLine("Misaki has now connected to:");
                 Console.WriteLine(string.Join(", ", client.Guilds));
                 int users = GetUserCount(client);
                 client.SetGameAsync($"Serving {users} bakas");

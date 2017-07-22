@@ -13,7 +13,7 @@ namespace Misaki
 
         private static void ConfigConsole()
         {
-            Console.Title = "Chitose";
+            Console.Title = "Misaki"; 
             Console.ForegroundColor = ConsoleColor.White; 
         }
     }
