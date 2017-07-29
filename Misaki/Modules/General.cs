@@ -11,7 +11,7 @@ namespace Misaki.Modules
         [Command("osu"), Summary("Loads picture of the users osu account")]
         public async Task Osu([Remainder, Summary("The osu! account")] string user)
         {
-            string signaturePath = Extensions.GetPicture(new Uri(string.Format("https://lemmmy.pw/osusig/sig.php?colour=pink&uname={0}&pp=1&countryrank", user)));
+            string signaturePath = Extensions.GetPicture(string.Format("https://lemmmy.pw/osusig/sig.php?colour=pink&uname={0}&pp=1&countryrank", user));
             await Context.Channel.SendFileAsync(signaturePath);
 
             File.Delete(signaturePath);

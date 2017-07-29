@@ -4,7 +4,7 @@ using Misaki.Objects;
 using OsuApi;
 using OsuApi.Model;
 using System;
-using Google.Cloud.Vision.V1;
+//using Google.Cloud.Vision.V1;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -97,26 +97,26 @@ namespace Misaki.Services
             return "Predicament reached"; 
         }
 
-        public async Embed GetBeatmapInfoFromImage()
-        {
-            System.Drawing.Image image = default(System.Drawing.Image);
-            try
-            {
-                using (var temporaryStream = new MemoryStream())
-                using (Sd.Bitmap croppedBeatmapImage = AcquireAndCropBeatmapImage(lastAttachment))
-                {
-                    croppedBeatmapImage.Save(temporaryStream, Sd.Imaging.ImageFormat.Png);
-                    temporaryStream.Position = 0;
-                    image = System.Drawing.Image.FromStream(temporaryStream); 
-                }
-            } 
-            catch (Exception e)
-            {
-                throw new BeatmapAnalysisException("Failed to save image", e); 
-            }
+        //public async Embed GetBeatmapInfoFromImage()
+        //{
+        //    System.Drawing.Image image = default(System.Drawing.Image);
+        //    try
+        //    {
+        //        using (var temporaryStream = new MemoryStream())
+        //        using (Sd.Bitmap croppedBeatmapImage = AcquireAndCropBeatmapImage(lastAttachment))
+        //        {
+        //            croppedBeatmapImage.Save(temporaryStream, Sd.Imaging.ImageFormat.Png);
+        //            temporaryStream.Position = 0;
+        //            image = System.Drawing.Image.FromStream(temporaryStream); 
+        //        }
+        //    } 
+        //    catch (Exception e)
+        //    {
+        //        throw new BeatmapAnalysisException("Failed to save image", e); 
+        //    }
 
-            var textList = await ImageAnnotatorClient.DetectTextAsync(image); 
-        }
+        //    var textList = await ImageAnnotatorClient.DetectTextAsync(image); 
+        //}
 
         private string CleanDiscordString(string text) => Regex.Replace(text, @"\*", @" ");
 
