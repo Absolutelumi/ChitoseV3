@@ -8,8 +8,8 @@ namespace Misaki.Objects
 {
     public enum CommandResult
     {
-        Success,
-        UserAlreadyOnRecord, 
-        NonexistantUser
+        Success = 1,
+        AlreadyOnRecord = 2, 
+        NotFound = 3
     }
 }

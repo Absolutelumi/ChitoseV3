@@ -31,7 +31,7 @@ namespace Misaki.Modules
 
             await VoiceServ.RemoveAndAddDefaultVC(Context.Guild);
 
-            await ReplyAsync("All done～"); 
+            await ReplyAsync("All done～ \n If you wish to add any more channels, feel free to do so. However, they will need to be under the 'Watchin' channel. If this is not done, the channel will be updated and not retain its name given."); 
         }
     }
 }

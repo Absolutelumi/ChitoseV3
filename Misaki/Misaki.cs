@@ -3,6 +3,7 @@ using Discord;
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace Misaki
 {
@@ -10,6 +11,8 @@ namespace Misaki
     {
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
         public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
+
+        public static Collection<SocketMessage> Messages = new Collection<SocketMessage>();
 
         private DiscordSocketClient client;
 
@@ -91,6 +94,12 @@ namespace Misaki
                 int users = GetUserCount(client);
                 client.SetGameAsync($"Serving {users} bakas");
                 InstallCommands().GetAwaiter();
+                return Task.CompletedTask;
+            };
+
+            client.MessageReceived += (msg) =>
+            {
+                Messages.Add(msg);
                 return Task.CompletedTask;
             };
 

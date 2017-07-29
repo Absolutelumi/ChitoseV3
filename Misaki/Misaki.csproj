@@ -8,11 +8,12 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Misaki</RootNamespace>
     <AssemblyName>Misaki</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -185,21 +186,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Misaki.cs" />
-    <Compile Include="Modules\AdminCommandVote.cs" />
     <Compile Include="Modules\Anime.cs" />
     <Compile Include="Modules\AutoManageVoiceChan.cs" />
     <Compile Include="Modules\Music.cs" />
     <Compile Include="Modules\OsuScoreUpload.cs" />
-    <Compile Include="Modules\Support.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\Enums.cs" />
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\ScoreImage.cs" />
+    <Compile Include="Objects\TypeReaders.cs" />
     <Compile Include="Services\AdminService.cs" />
+    <Compile Include="Services\AutoRoleService.cs" />
     <Compile Include="Services\AnnounceService.cs" />
     <Compile Include="Services\AutoModService.cs" />
     <Compile Include="Services\AutoVoiceManageService.cs" />
-    <Compile Include="Services\Mal.cs" />
+    <Compile Include="Services\MalService.cs" />
     <Compile Include="Services\MusicService.cs" />
     <Compile Include="Services\OsuRecentScoreService.cs" />
     <Compile Include="Extensions.cs" />
@@ -212,6 +213,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\OsuService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

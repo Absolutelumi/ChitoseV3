@@ -19,7 +19,7 @@ namespace Misaki.Modules
         {
             Mal.AnimeResult animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Keys.MalPassword);
             string description = TagMatcher.Replace(animeResult.synopsis, string.Empty);
-            System.Drawing.Color bestColor = Extensions.GetBestColor(new Bitmap(Extensions.GetPicture(new Uri(animeResult.image))));
+            System.Drawing.Color bestColor = Extensions.GetBestColor(animeResult.image);
             Discord.Color bestDiscordColor = new Discord.Color(bestColor.R, bestColor.G, bestColor.B);
             Embed msg = new EmbedBuilder()
                 .WithThumbnailUrl(animeResult.image)
