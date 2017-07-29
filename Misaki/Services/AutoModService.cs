@@ -10,37 +10,27 @@ namespace Misaki.Services
 {
     public class AutoModService
     {
-        private ICollection<SocketMessage> Messages { get; set; }
-
         public AutoModService(DiscordSocketClient client)
         {
-            Messages = new System.Collections.ObjectModel.Collection<SocketMessage>(); 
-
-            client.MessageReceived += (e) =>
+            client.MessageReceived += async (msg) =>
             {
-                Messages.Add(e);
-                if (SameMessagesBySameUser(e))
-                {
-                    SocketMessage message = Messages.LastOrDefault();
-                    DeleteAndPunish(message);
-                }
-                return Task.CompletedTask; 
+                if (SameMessagesBySameUser(msg)) await DeleteAndPunish(msg);
             };
         }
 
-        private void DeleteAndPunish(SocketMessage msg)
+        private async Task DeleteAndPunish(SocketMessage msg)
         {
             SocketGuildUser user = msg.Author as SocketGuildUser; 
-            foreach (SocketMessage message in Messages)
+            foreach (SocketMessage message in Misaki.Messages)
             {
-                if (message.Content == msg.Content && message.Author == msg.Author) message.DeleteAsync().GetAwaiter();
+                if (message.Content == msg.Content && message.Author == msg.Author) await message.DeleteAsync();
             }
-            user.GetOrCreateDMChannelAsync().GetAwaiter().GetResult().SendMessageAsync("Hey, how about you stop fucking spamming?");
+            await user.GetOrCreateDMChannelAsync().Result.SendMessageAsync("Hey, how about you stop fucking spamming?");
         }
 
         private bool SameMessagesBySameUser(SocketMessage msg)
         {
-            if (Messages.TakeWhile(message => message.Content == msg.Content).Count() >= 3 && Messages.TakeWhile(message => message.Author == msg.Author).Count() >= 3) return true;
+            if (Misaki.Messages.TakeWhile(message => message.Content == msg.Content).TakeWhile(message => message.Author == msg.Author).Count() >= 3) return true;
             return false;
         }
     }

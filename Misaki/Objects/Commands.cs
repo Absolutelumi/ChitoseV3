@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Misaki.Objects
 {
@@ -22,7 +23,8 @@ namespace Misaki.Objects
 
             services = new ServiceCollection()
                 .AddSingleton(client)
-                .AddSingleton(new AnnounceService())
+                .AddSingleton(new AnnounceService(client))
+                .AddSingleton(new OsuService(client))
                 .AddSingleton(new OsuRecentScoreService(client))
                 .AddSingleton(new AdminService())
                 .AddSingleton(new AutoVoiceManageService(client))
@@ -56,7 +58,7 @@ namespace Misaki.Objects
 
         public async Task Install()
         {
-            client.MessageReceived += async (SocketMessage e) => await Handle(e);
+            client.MessageReceived += async (SocketMessage e) => await Handle(e); 
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }

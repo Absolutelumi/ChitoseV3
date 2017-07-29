@@ -96,7 +96,7 @@ namespace Misaki
             }
         }
 
-        public static string GetPicture(Uri url)
+        public static string GetPicture(string url)
         {
             using (var webClient = new WebClient())
             {
@@ -151,8 +151,9 @@ namespace Misaki
             return HttpUtility.UrlEncode(text);
         }
 
-        public static Color GetBestColor(Bitmap image)
+        public static Color GetBestColor(string url)
         {
+            Bitmap image = new Bitmap(GetPicture(url)); 
             const int range = 8;
             int numberOfCategories = (int)Math.Ceiling(256.0 / range); 
             double[,,] colorCounts = new double[numberOfCategories, numberOfCategories, numberOfCategories];

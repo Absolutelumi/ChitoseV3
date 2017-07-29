@@ -54,8 +54,9 @@ namespace Misaki.Services
                 await VC.DeleteAsync();
             }
 
-            int defaultVCCount = guild.GetUsersAsync().GetAwaiter().GetResult().Count / 10 >= 2 ? guild.GetUsersAsync().GetAwaiter().GetResult().Count : 2; 
-            for (; defaultVCCount > 0; defaultVCCount--)
+            int numberOfUsers = guild.GetUsersAsync().Result.Count;
+            double defaultVoiceChannelCount = Math.Max(Math.Round(numberOfUsers / 10.0), 2.0); 
+            for (; defaultVoiceChannelCount > 0; defaultVoiceChannelCount--)
             {
                 await guild.CreateVoiceChannelAsync("Lobby");
             }
@@ -68,24 +69,28 @@ namespace Misaki.Services
             Action<GuildProperties> modifyAFK = new Action<GuildProperties>(ChangeAFKChan);
 
             await guild.ModifyAsync(modifyAFK);
+
+            foreach (IVoiceChannel VC in guild.GetVoiceChannelsAsync().Result) await UpdateVC(VC); 
         }
 
         public async Task UpdateVC(IVoiceChannel VC)
         {
-            if (VC.Id == VC.Guild.AFKChannelId || VC.Name == "Watchin") return;
+            string defaultVCName = "Lobby" + VC.Position; 
+            int watchinPos = VC.Guild.GetVoiceChannelsAsync().Result.Where(chan => chan.Name == "Watchin").FirstOrDefault().Position; 
+            if (watchinPos <= VC.Position) return;
 
-            IReadOnlyCollection<IUser> users = await VC.GetUsersAsync().First();
+            IReadOnlyCollection<IUser> users = await VC.GetUsersAsync().FirstOrDefault();
 
-            if (users.Count == 0 && VC.Name == "Lobby") return; 
+            if (users.Count == 0 && VC.Name == defaultVCName) return; 
 
-            string newName = users.Count == 0 ? "Lobby" : users.First().Game?.Name ?? "Lobby";
+            string newName = users.Count == 0 ? defaultVCName : users.First().Game?.Name ?? defaultVCName;
 
             if (newName != "Lobby")
             {
                 foreach (IGuildUser user in users)
                 {
                     if (user.IsBot) continue;
-                    if (user.Game.Value.Name != newName) newName = "Lobby";
+                    if (user.Game?.Name != newName) newName = defaultVCName;
                 }
             }
 
