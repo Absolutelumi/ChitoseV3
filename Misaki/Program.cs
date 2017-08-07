@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Timers;
 
 namespace Misaki
 {
@@ -6,15 +7,10 @@ namespace Misaki
     {
         private static void Main(string[] args)
         {
-            ConfigConsole(); 
+            Console.Title = "Misaki";
+            Console.ForegroundColor = ConsoleColor.White;
 
-            Misaki bot = new Misaki();
-        }
-
-        private static void ConfigConsole()
-        {
-            Console.Title = "Misaki"; 
-            Console.ForegroundColor = ConsoleColor.White; 
+            var bot = new Misaki();
         }
     }
 }

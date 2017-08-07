@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Xml;
 
@@ -37,7 +38,7 @@ namespace Misaki.Services
                     }
                 }
             }
-            catch { }
+            catch (Exception e) { Extensions.ManageException(e); }
             return new AnimeResult() { valid = false };
         }
 

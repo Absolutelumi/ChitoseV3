@@ -10,26 +10,28 @@ using System.Threading;
 
 namespace Misaki.Objects
 {
-    public class Commands
+    public class Commands 
     {
-        private DiscordSocketClient client;
+        private DiscordSocketClient Client = Misaki.Client; 
 
         private CommandService commands;
         private IServiceProvider services;
 
-        public Commands(DiscordSocketClient client)
+        public Commands()
         {
-            this.client = client;
+            // Services not used by modules
+            new AnnounceService();
+            new RoleManageService();
 
+            // Instantialize services that have functionality outside of being used in modules
             services = new ServiceCollection()
-                .AddSingleton(client)
-                .AddSingleton(new AnnounceService(client))
-                .AddSingleton(new OsuService(client))
-                .AddSingleton(new OsuRecentScoreService(client))
-                .AddSingleton(new AdminService())
-                .AddSingleton(new AutoVoiceManageService(client))
-                .AddSingleton(new MusicService())
-                .BuildServiceProvider();
+            .AddSingleton(Client)
+            .AddSingleton(new OsuRecentScoreService())
+            .AddSingleton(new VoiceManageService())
+            .AddSingleton<AdminService>()
+            .AddSingleton<MusicService>()
+            .AddSingleton<AnimeService>()
+            .BuildServiceProvider();
 
             commands = new CommandService();
         }
@@ -42,9 +44,9 @@ namespace Misaki.Objects
 
             int argPos = 0;
 
-            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(client.CurrentUser, ref argPos)) || message.Author.IsBot) return;
+            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(Client.CurrentUser, ref argPos)) || message.Author.IsBot || message.Content == "!") return;
 
-            var context = new CommandContext(client, message);
+            var context = new CommandContext(Client, message);
             var result = await commands.ExecuteAsync(context, argPos, services);
 
             if (!result.IsSuccess)
@@ -52,13 +54,12 @@ namespace Misaki.Objects
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{message} => {result.ErrorReason}");
                 Console.ForegroundColor = ConsoleColor.White;
-                await context.Channel.SendMessageAsync(result.ErrorReason);
             }
         }
 
         public async Task Install()
         {
-            client.MessageReceived += async (SocketMessage e) => await Handle(e); 
+            Client.MessageReceived += async (SocketMessage msg) => await Handle(msg); 
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }

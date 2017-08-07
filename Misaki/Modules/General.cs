@@ -1,5 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
+using Misaki.Objects;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -12,7 +14,7 @@ namespace Misaki.Modules
         public async Task Osu([Remainder, Summary("The osu! account")] string user)
         {
             string signaturePath = Extensions.GetPicture(string.Format("https://lemmmy.pw/osusig/sig.php?colour=pink&uname={0}&pp=1&countryrank", user));
-            await Context.Channel.SendFileAsync(signaturePath);
+            await Context.Channel.SendFileAsync(signaturePath); 
 
             File.Delete(signaturePath);
         }
@@ -30,6 +32,9 @@ namespace Misaki.Modules
 
         [Command("GetGuildId"), Summary("Watchu think?")]
         public async Task GetGuildId() => await ReplyAsync(Context.Guild.Id.ToString());
+
+        [Command("GetUserId"), Summary("kkk")]
+        public async Task GetUserId() => await ReplyAsync(Context.User.Id.ToString());
 
         [Command("GetChannelId"), Summary("Gets text channel id")]
         public async Task GetChannelId() => await ReplyAsync(Context.Channel.Id.ToString());

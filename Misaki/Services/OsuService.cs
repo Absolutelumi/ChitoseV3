@@ -1,41 +1,46 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Google.Cloud.Vision.V1;
 using Misaki.Objects;
 using OsuApi;
 using OsuApi.Model;
 using System;
-//using Google.Cloud.Vision.V1;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization; 
 using Sd = System.Drawing;
 
 namespace Misaki.Services
 {
-    public class OsuService
+    public class OsuService 
     {
-        private static readonly Api OsuApi = new Api(Keys.OsuApiKey); 
-        private static readonly Regex NewBeatmapUrlMatcher = new Regex(@"(?<full_link>(https:\/\/)?osu.ppy.sh\/beatmapsets\/)?<beatmap_set_id>\d+)(#osu\/(?<beatmap_id>\d+))?\S*)");
+        private DiscordSocketClient client = Misaki.Client;
+        private static readonly Api OsuApi = new Api(Keys.OsuApiKey);
+        private static readonly ImageAnnotatorClient ImageAnnotatorClient = ImageAnnotatorClient.Create();
+        private static readonly JavaScriptSerializer json = new JavaScriptSerializer(); 
+        private static readonly Regex NewBeatmapUrlMatcher = new Regex(@"(?<full_link>(https:\/\/)?osu.ppy.sh\/beatmapsets\/(?<beatmap_set_id>\d+)(#osu\/(?<beatmap_id>\d+))?\S*)");
         private static readonly Regex OldBeatmapUrlMatcher = new Regex(@"(?<full_link>(https:\/\/)?osu.ppy.sh\/(?<b_s>[bs])\/(?<beatmap_id>\d+)\S*)");
         private static string lastAttachment;
 
-        public OsuService(DiscordSocketClient client)
+        public OsuService()
         {
-            client.MessageReceived += async (e) =>
+            client.MessageReceived += async (msg) =>
             {
-                if (e.Author.IsBot) return;
-                if (e.Attachments.Count == 1) lastAttachment = e.Attachments.First().Url;
-                foreach (BeatmapResult result in ExtractBeatmapsFromText(e.Content))
+                if (msg.Author.IsBot) return;
+                if (msg.Attachments.Count == 1) lastAttachment = msg.Attachments.First().Url;
+                foreach (BeatmapResult result in ExtractBeatmapsFromText(msg.Content))
                 {
-                    if (result.FullLink == e.Content) await e.DeleteAsync();
+                    if (result.FullLink == msg.Content) await msg.DeleteAsync();
                     Beatmap[] beatmaps = await (result.IsSet ? OsuApi.GetBeatmapSet.WithSetId(result.Id).Results() : OsuApi.GetSpecificBeatmap.WithId(result.Id).Results());
                     if (beatmaps.Length < 1) return;
-                    if (result.IsSet) await e.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapSetInfo(result.Id));
-                    else await e.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapInfo(result.Id)); 
+                    if (result.IsSet) await msg.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapSetInfo(new BeatmapSet(OsuApi.GetBeatmapSet.WithSetId(result.Id).Results().Result)));
+                    else await msg.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapInfo(OsuApi.GetSpecificBeatmap.WithId(result.Id).Results().Result.First()));
                 }
             };
         }
@@ -50,9 +55,8 @@ namespace Misaki.Services
             }
         }
 
-        private Embed FormatBeatmapInfo(string id)
-        {
-            Beatmap beatmap = OsuApi.GetSpecificBeatmap.WithId(id).Results(1).Result.First(); 
+        private Embed FormatBeatmapInfo(Beatmap beatmap)
+        { 
             var sysColor = Extensions.GetBestColor($"https://assets.ppy.sh/beatmaps/{beatmap.BeatmapId}/covers/cover.jpg");
             Color discordColor = new Color(sysColor.R, sysColor.G, sysColor.B);
             return new EmbedBuilder()
@@ -71,12 +75,11 @@ namespace Misaki.Services
                 .Build();
         }
 
-        private Embed FormatBeatmapSetInfo(string id)
+        private Embed FormatBeatmapSetInfo(BeatmapSet beatmapSet)
         {
-            BeatmapSet beatmapSet = new BeatmapSet(OsuApi.GetBeatmapSet.WithSetId(id).Results(1).Result);
             var sysColor = Extensions.GetBestColor($"https://assets.ppy.sh/beatmaps/{beatmapSet.Id}/covers/cover.jpg");
             Color discordColor = new Color(sysColor.R, sysColor.G, sysColor.B);
-            return new EmbedBuilder()
+            Embed embed = new EmbedBuilder()
                 .WithTitle(beatmapSet.Title)
                 .WithAuthor(beatmapSet.Artist)
                 .WithUrl(OsuApi.GetBeatmapSet.WithSetId(beatmapSet.Id).Results().Result.First().Source)
@@ -89,40 +92,105 @@ namespace Misaki.Services
                 .WithFooter(beatmapSet.Beatmapper, $"a.ppy.sh/{OsuApi.GetUser.WithUser(beatmapSet.Beatmapper).Result().Result.UserID}")
                 .WithColor(discordColor)
                 .Build();
+
+            return embed; 
         }
 
         public string GetUserInfo(string username)
         {
             User user = OsuApi.GetUser.WithUser(username).Result().Result;
-            return "Predicament reached"; 
+            Score bestPlay = OsuApi.GetBestPlay.WithId(user.UserID).Result(1).Result.First();
+            Beatmap beatmap = OsuApi.GetSpecificBeatmap.WithId(bestPlay.BeatmapId).Results().Result.First();
+            if (user == null) return "User not found!";
+            var userInformation = new StringBuilder()
+                    .AppendLine($"__**{user.Username}**__")
+                    .AppendLine($"User Best: **{beatmap.Title} [{beatmap.Difficulty}]** giving **{bestPlay.PP}pp**")
+                    .AppendLine("```")
+                    .AppendLine($"Rank: {user.Rank}")
+                    .AppendLine($"Performance Points: {user.PP}")
+                    .AppendLine($"Country: {user.Country}")
+                    .AppendLine($"Country Rank: {user.CountryRank}")
+                    .AppendLine($"Level: {user.Level}")
+                    .AppendLine("```");
+            return userInformation.ToString();
         }
 
-        //public async Embed GetBeatmapInfoFromImage()
-        //{
-        //    System.Drawing.Image image = default(System.Drawing.Image);
-        //    try
-        //    {
-        //        using (var temporaryStream = new MemoryStream())
-        //        using (Sd.Bitmap croppedBeatmapImage = AcquireAndCropBeatmapImage(lastAttachment))
-        //        {
-        //            croppedBeatmapImage.Save(temporaryStream, Sd.Imaging.ImageFormat.Png);
-        //            temporaryStream.Position = 0;
-        //            image = System.Drawing.Image.FromStream(temporaryStream); 
-        //        }
-        //    } 
-        //    catch (Exception e)
-        //    {
-        //        throw new BeatmapAnalysisException("Failed to save image", e); 
-        //    }
+        public Embed GetBeatmapInfoFromImage(string username = null)
+        {
+            Google.Cloud.Vision.V1.Image image = new Google.Cloud.Vision.V1.Image();
+            try
+            {
+                using (var temporaryStream = new MemoryStream())
+                using (Sd.Bitmap croppedBeatmapImage = AcquireAndCropBeatmapImage(lastAttachment))
+                {
+                    croppedBeatmapImage.Save(temporaryStream, Sd.Imaging.ImageFormat.Png);
+                    temporaryStream.Position = 0;
+                    image = Google.Cloud.Vision.V1.Image.FromStream(temporaryStream);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new BeatmapAnalysisException("Failed to save image", e);
+            }
 
-        //    var textList = await ImageAnnotatorClient.DetectTextAsync(image); 
-        //}
+            var textList = ImageAnnotatorClient.DetectTextAsync(image).Result;
+            string[] beatmapInformation = textList.First().Description.Split('\n');
+            string beatmapNameAndDifficulty = beatmapInformation[0];
+            int locationOfBy = beatmapInformation[1].IndexOf("by");
+            string beatmapper = username ?? beatmapInformation[1].Substring(locationOfBy);
+            IEnumerable<BeatmapSetResult> sortedBeatmaps = GetBeatmapsByMapper(beatmapper);
+            BeatmapSetResult beatmapResult = sortedBeatmaps.FirstOrDefault();
+            if (beatmapResult == null) throw new BeatmapAnalysisException("Failed to detect creator. Try the command again by specifiying the creator.");
+
+            var splitIndex = -1;
+            var bestSimilarity = 0.0;
+            for (var candidateSplitIndex = 0; candidateSplitIndex <= beatmapNameAndDifficulty.Length; candidateSplitIndex++)
+            {
+                var candidateSimilarity = Extensions.CalculateSimilarity(beatmapResult.Name, beatmapNameAndDifficulty.Substring(0, candidateSplitIndex));
+                if (candidateSimilarity > bestSimilarity)
+                {
+                    splitIndex = candidateSplitIndex;
+                    bestSimilarity = candidateSimilarity; 
+                }
+            }
+            var beatmapName = beatmapNameAndDifficulty.Substring(0, splitIndex);
+            var difficultyName = beatmapNameAndDifficulty.Substring(splitIndex);
+
+            IEnumerable<Beatmap> potentialBeatmaps = Enumerable.Empty<Beatmap>(); 
+            foreach (BeatmapSetResult potentialBeatmapResult in sortedBeatmaps.TakeWhile(result => Extensions.CalculateSimilarity(result.Name, beatmapName) / bestSimilarity > 0.99))
+            {
+                potentialBeatmaps = potentialBeatmaps.Concat(OsuApi.GetBeatmapSet.WithSetId(potentialBeatmapResult.SetId).Results(20).Result);
+            }
+            var selectedBeatmap = potentialBeatmaps.OrderByDescending(beatmap => Extensions.CalculateSimilarity(beatmap.Difficulty, difficultyName)).FirstOrDefault();
+            if (selectedBeatmap == null) throw new BeatmapAnalysisException("Failed to retrieve beatmap");
+
+            return FormatBeatmapInfo(selectedBeatmap); 
+        }
 
         private string CleanDiscordString(string text) => Regex.Replace(text, @"\*", @" ");
 
         private string ToMinutes(int? seconds) => TimeSpan.FromSeconds(seconds.Value).ToString(@"m\:ss"); 
 
-        private BeatmapResult ExtractBeatmapFromText(string text) => ExtractBeatmapFromText(text); 
+        private BeatmapResult ExtractBeatmapFromText(string text) => ExtractBeatmapFromText(text);
+
+        private static List<BeatmapSetResult> GetBeatmapsByMapper(string beatmapper)
+        {
+            var beatmapQueryUrl = $"http://osusearch.com/query/?mapper={beatmapper.UrlEncode()}";
+            var beatmapQueryRequest = WebRequest.CreateHttp(beatmapQueryUrl);
+            string queryResponse = beatmapQueryRequest.GetResponse().GetResponseStream().ReadString();
+            var searchResult = json.Deserialize<BeatmapSearchResult>(queryResponse);
+            int resultCount = searchResult.result_count;
+            List<BeatmapSetResult> beatmapResults = searchResult.beatmaps.Select(result => new BeatmapSetResult(result)).ToList();
+            int queryAttempts = 1;
+            while (beatmapResults.Count < resultCount)
+            {
+                var additionalQueryRequest = WebRequest.CreateHttp($"{beatmapQueryUrl}&offset={queryAttempts++}");
+                queryResponse = additionalQueryRequest.GetResponse().GetResponseStream().ReadString();
+                searchResult = json.Deserialize<BeatmapSearchResult>(queryResponse);
+                beatmapResults.AddRange(searchResult.beatmaps.Select(result => new BeatmapSetResult(result)));
+            }
+            return beatmapResults;
+        }
 
         private IEnumerable<BeatmapResult> ExtractBeatmapsFromText(string text)
         {
@@ -236,7 +304,7 @@ namespace Misaki.Services
             public override string ToString() => maximum == minimum ? $"{maximum}" : $"{minimum}-{maximum}"; 
         }
 
-        private class BeatmapAnalysisException : Exception
+        private class BeatmapAnalysisException : Exception, ISerializable
         {
             public BeatmapAnalysisException() : base() { }
 

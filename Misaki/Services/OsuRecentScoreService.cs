@@ -12,29 +12,25 @@ using System.Linq;
 
 namespace Misaki.Services
 {
-    
-    public class OsuRecentScoreService
+    public class OsuRecentScoreService 
     {
         private static readonly Api OsuApi = new Api(Keys.OsuApiKey);
         private static readonly string OsuScorePath = Misaki.ConfigPath + "Osu!Score.txt";
-        private Dictionary<string, DateTime> LatestUpdate;
+        private Dictionary<string, DateTime> LatestUpdate = new Dictionary<string, DateTime>();
 
-        private DiscordSocketClient Client { get; set; }
-        private IMessageChannel OsuChannel { get; set; }
+        private DiscordSocketClient Client = Misaki.Client;
+        private readonly IMessageChannel OsuChannel;
 
-        public OsuRecentScoreService(DiscordSocketClient client)
+        public OsuRecentScoreService()
         {
-            Client = client;
-
-            LatestUpdate = new Dictionary<string, DateTime>();
             GetUsers();
 
-            OsuChannel = Client.GetGuild(220673514720591872).GetChannel(316390541162053634) as IMessageChannel; 
+            OsuChannel = Client.GetGuild(220673514720591872).GetChannel(316390541162053634) as IMessageChannel;
 
-            Timer timer = new Timer(10000);
+            Timer timer = new Timer(1000);
             timer.AutoReset = true;
             timer.Elapsed += (_, __) => SendUserRecentScore();
-            timer.Start(); 
+            timer.Start();
         }
 
         public async Task<string> Follow(string user)
@@ -45,12 +41,12 @@ namespace Misaki.Services
 
             if (LatestUpdate.ContainsKey(osuUser.Username)) return "User already on record."; 
 
-            else UpdateUser(osuUser.Username, new DateTime(0));
+            UpdateUser(osuUser.Username, new DateTime(0));
 
             return $"{osuUser.Username} has been added! Any ranked score {osuUser.Username} sets will show up in {MentionUtils.MentionChannel(OsuChannel.Id)}"; 
         }
 
-        public async Task<String> Unfollow(string user)
+        public async Task<string> Unfollow(string user)
         {
             User osuUser = await OsuApi.GetUser.WithUser(user).Result();
 
@@ -73,7 +69,7 @@ namespace Misaki.Services
                         if (!(IsNewScore(recentScore) && recentScore.Rank != Rank.F)) continue;
 
                         UpdateUser(recentScore.Username, recentScore.Date);
-                        Beatmap beatmap = (await OsuApi.GetSpecificBeatmap.WithId(recentScore.BeatmapId).Results(1)).FirstOrDefault();
+                        Beatmap beatmap = (await OsuApi.GetSpecificBeatmap.WithId(recentScore.BeatmapId).Results()).FirstOrDefault();
                         User user = await OsuApi.GetUser.WithUser(username).Result();
                         using (var temporaryStream = new MemoryStream())
                         {
@@ -83,7 +79,7 @@ namespace Misaki.Services
                         }
                     }
                 }
-                catch { }
+                catch (Exception e) { Extensions.ManageException(e); }
             }
         }
 
