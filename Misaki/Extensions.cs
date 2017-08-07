@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Discord;
+using Discord.WebSocket;
+using Misaki.Objects;
+using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Web;
 
 namespace Misaki
@@ -11,6 +16,13 @@ namespace Misaki
     internal static class Extensions
     {
         public static readonly Random rng = new Random();
+
+        private static DiscordSocketClient Client { get; set; }
+
+        static Extensions()
+        {
+            Client = Misaki.Client; 
+        }
 
         /// <summary>
         /// Calculate percentage similarity of two strings <param name="source">Source String to
@@ -28,6 +40,32 @@ namespace Misaki
 
             int stepsToSame = ComputeLevenshteinDistance(source, target);
             return 1.0 - ((double)stepsToSame / Math.Max(source.Length, target.Length));
+        }
+
+        public static string GetDescription<T>(this T enumerationValue)
+    where T : struct
+        {
+            Type type = enumerationValue.GetType();
+            if (!type.IsEnum)
+            {
+                throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+            }
+
+            //Tries to find a DescriptionAttribute for a potential friendly name
+            //for the enum
+            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+            if (memberInfo != null && memberInfo.Length > 0)
+            {
+                object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+                if (attrs != null && attrs.Length > 0)
+                {
+                    //Pull out the description value
+                    return ((DescriptionAttribute)attrs[0]).Description;
+                }
+            }
+            //If we have no description attribute, just return the ToString of the enum
+            return enumerationValue.ToString();
         }
 
         public static string CleanFileName(string filename)
@@ -151,7 +189,7 @@ namespace Misaki
             return HttpUtility.UrlEncode(text);
         }
 
-        public static Color GetBestColor(string url)
+        public static System.Drawing.Color GetBestColor(string url)
         {
             Bitmap image = new Bitmap(GetPicture(url)); 
             const int range = 8;
@@ -163,7 +201,7 @@ namespace Misaki
             {
                 for (int imageColumn = 0; imageColumn < image.Width; imageColumn++)
                 {
-                    Color color = image.GetPixel(imageColumn, imageRow);
+                    System.Drawing.Color color = image.GetPixel(imageColumn, imageRow);
                     int redIndex = (int)(color.R / range);
                     int greenIndex = (int)(color.G / range);
                     int blueIndex = (int)(color.B / range);
@@ -187,7 +225,14 @@ namespace Misaki
             int bestRed = bestColor[0] * range + range / 2;
             int bestGreen = bestColor[1] * range + range / 2;
             int bestBlue = bestColor[2] * range + range / 2;
-            return Color.FromArgb(bestRed, bestGreen, bestBlue);
+            return System.Drawing.Color.FromArgb(bestRed, bestGreen, bestBlue);
+        }
+        
+        public static void ManageException(Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow; 
+            Console.WriteLine($"Exception thrown - {e.Message}");
+            Console.ResetColor(); 
         }
     }
 }

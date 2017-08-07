@@ -1,21 +1,27 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ChitoseV3.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Misaki.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Token" Type="System.String" Scope="User">
-      <Value Profile="(Default)">MzM4MTY3NDExOTk4MDY0NjQx.DFRelA._0brpgm1ERDp4Gy3ZJMntScFVS4</Value>
+      <Value Profile="(Default)">MzQwODQ0NjE3NzA2NjM1Mjcz.DF4bzA.lmxxXUzpVzL-geBCQ84lc3nCSCg</Value>
     </Setting>
     <Setting Name="ConfigDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">G:\Absolutelumi\プログラミング\BOT\Config\</Value>
+      <Value Profile="(Default)">H:\Projects\Bot\Config\</Value>
     </Setting>
     <Setting Name="OsuApiKey" Type="System.String" Scope="User">
       <Value Profile="(Default)">27ce8543aa8a418a04336ffb519c898e25e2b9b2</Value>
     </Setting>
     <Setting Name="TempDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">G:\Absolutelumi\プログラミング\BOT\Temp\</Value>
+      <Value Profile="(Default)">H:\Projects\Bot\Temp\</Value>
     </Setting>
     <Setting Name="MALPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">wpck2vbZjN2A</Value>
+    </Setting>
+    <Setting Name="ffmpegPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\ffmpeg-3.2.2-win64-static\</Value>
+    </Setting>
+    <Setting Name="HostingUserId" Type="System.UInt64" Scope="User">
+      <Value Profile="(Default)">112300152391294976</Value>
     </Setting>
   </Settings>
 </SettingsFile>

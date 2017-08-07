@@ -7,7 +7,9 @@ namespace Misaki.Services
 {
     public class AnnounceService
     {
-        public AnnounceService(DiscordSocketClient client)
+        private DiscordSocketClient client = Misaki.Client; 
+
+        public AnnounceService()
         {
             client.UserJoined += async (user) =>
             {

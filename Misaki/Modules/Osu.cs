@@ -13,6 +13,6 @@ namespace Misaki.Modules
         public async Task GetUser(string user) => await ReplyAsync(CircleService.GetUserInfo(user));
 
         //[Command("beatmap"), Summary("Gets BM info from score image")]
-        //public async Task GetBMInfoFromImage() => await ReplyAsync(string.Empty, embed: CircleService.GetBeatmapInfoFromImage()); 
+        //public async Task GetBMInfoFromImage() => await ReplyAsync(string.Empty, embed: CircleService.GetBeatmapInfoFromImage());
     }
 }

@@ -7,21 +7,21 @@ using Discord.WebSocket;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Collections.ObjectModel;
+using Misaki.Objects;
 
 namespace Misaki.Services
 {
-    public class AutoVoiceManageService
+    public class VoiceManageService 
     {
-        public Collection<string> Guilds = new Collection<string>();
+        private DiscordSocketClient client = Misaki.Client; 
 
-        private readonly string VoicePath = Misaki.ConfigPath + "AutoVoiceGuilds.txt"; 
+        public readonly Collection<string> Guilds = new Collection<string>();
 
-        public AutoVoiceManageService(DiscordSocketClient client)
+        private static readonly string VoicePath = Misaki.ConfigPath + "AutoVoiceGuilds.txt";
+
+        public VoiceManageService()
         {
-            foreach (var guild in File.ReadAllLines(VoicePath))
-            {
-                Guilds.Add(guild); 
-            }
+            foreach (var guild in File.ReadAllLines(VoicePath)) Guilds.Add(guild);
 
             client.UserVoiceStateUpdated += async (_, previous, current) =>
             {
@@ -35,10 +35,17 @@ namespace Misaki.Services
                 if (newState.VoiceChannel == null) return;
                 await UpdateVC(newState.VoiceChannel); 
             };
+
+            using (Timer timer = new Timer(600000))
+            {
+                timer.AutoReset = true;
+                timer.Elapsed += (_, __) => UpdateAllVC(client).GetAwaiter();
+                timer.Start();
+            }
         }
 
         public void AddGuild(IGuild guild)
-        {
+        { 
             using (FileStream stream = File.Open(VoicePath, FileMode.Truncate, FileAccess.Write))
             using (StreamWriter streamWriter = new StreamWriter(stream))
             {
@@ -73,9 +80,18 @@ namespace Misaki.Services
             foreach (IVoiceChannel VC in guild.GetVoiceChannelsAsync().Result) await UpdateVC(VC); 
         }
 
+        public async Task UpdateAllVC(DiscordSocketClient client)
+        {
+            foreach (var guild in Guilds)
+            {
+                var Guild = client.GetGuild(ulong.Parse(guild));
+                foreach (var VC in Guild.VoiceChannels) await UpdateVC(VC);
+            }
+        }
+
         public async Task UpdateVC(IVoiceChannel VC)
         {
-            string defaultVCName = "Lobby" + VC.Position; 
+            string defaultVCName = $"Lobby {VC.Position + 1}"; 
             int watchinPos = VC.Guild.GetVoiceChannelsAsync().Result.Where(chan => chan.Name == "Watchin").FirstOrDefault().Position; 
             if (watchinPos <= VC.Position) return;
 

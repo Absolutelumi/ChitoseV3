@@ -25,7 +25,7 @@ namespace Misaki.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("MzM4MTY3NDExOTk4MDY0NjQx.DFRelA._0brpgm1ERDp4Gy3ZJMntScFVS4")]
+        [global::System.Configuration.DefaultSettingValueAttribute("MzQwODQ0NjE3NzA2NjM1Mjcz.DF4bzA.lmxxXUzpVzL-geBCQ84lc3nCSCg")]
         public string Token {
             get {
                 return ((string)(this["Token"]));
@@ -37,7 +37,7 @@ namespace Misaki.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("G:\\Absolutelumi\\プログラミング\\BOT\\Config\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("H:\\Projects\\Bot\\Config\\")]
         public string ConfigDirectory {
             get {
                 return ((string)(this["ConfigDirectory"]));
@@ -61,7 +61,7 @@ namespace Misaki.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("G:\\Absolutelumi\\プログラミング\\BOT\\Temp\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("H:\\Projects\\Bot\\Temp\\")]
         public string TempDirectory {
             get {
                 return ((string)(this["TempDirectory"]));
@@ -80,6 +80,30 @@ namespace Misaki.Properties {
             }
             set {
                 this["MALPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ffmpeg-3.2.2-win64-static\\")]
+        public string ffmpegPath {
+            get {
+                return ((string)(this["ffmpegPath"]));
+            }
+            set {
+                this["ffmpegPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("112300152391294976")]
+        public ulong HostingUserId {
+            get {
+                return ((ulong)(this["HostingUserId"]));
+            }
+            set {
+                this["HostingUserId"] = value;
             }
         }
     }

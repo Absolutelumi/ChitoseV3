@@ -163,11 +163,12 @@ namespace Misaki.Objects
             string difficultyString = $"[{difficulty}]";
             int maxWidth = BackgroundWidth - 40 - StrokeWidth * 2;
             SizeF difficultySize = graphics.MeasureString(difficultyString, titleFont);
-            float remainingWidth = maxWidth - difficultySize.Width;
             SizeF titleSize = graphics.MeasureString(title, titleFont);
-            if (titleSize.Width >= BackgroundWidth / 2 - 20)
-                title = TrimTitle(title, graphics, titleFont);
-            titlePath.AddString(title + " " + difficultyString + $" {stars}*", titleFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 60 / 150, new Point(15, 10), titleFormat);
+            SizeF starSize = graphics.MeasureString($" {stars}★", titleFont);
+            float usedWidth = difficultySize.Width + titleSize.Width + starSize.Width; 
+            if (usedWidth > maxWidth && difficultySize.Width > titleSize.Width) difficultyString = $"[{Trim(difficultyString, usedWidth, graphics, titleFont)}]";
+            if (usedWidth > maxWidth && difficultySize.Width < titleSize.Width) title = Trim(title, usedWidth, graphics, titleFont); 
+            titlePath.AddString(title + " " + difficultyString + $" {stars}★", titleFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 60 / 150, new Point(15, 10), titleFormat);
             graphics.DrawPath(WhitePen, titlePath);
             graphics.FillPath(BlueBrush, titlePath);
         }
@@ -230,16 +231,17 @@ namespace Misaki.Objects
             return graphicsPath;
         }
 
-        private static string TrimTitle(string title, Graphics graphics, Font titleFont)
+        private static string Trim(string text, float usedWidth, Graphics graphics, Font font)
         {
-            while (graphics.MeasureString(title, titleFont).Width > BackgroundWidth / 2 - 20)
+            float maxWidth = BackgroundWidth - 40 - StrokeWidth * 2;
+            float widthWithoutText = usedWidth - graphics.MeasureString(text, font).Width; 
+
+            while (graphics.MeasureString(text, font).Width + widthWithoutText > maxWidth)
             {
-                title = title.Remove(title.Length - 1);
+                text = text.Remove(text.Length - 1);
             }
 
-            title = title + "...";
-
-            return title;
+            return text.Remove(text.Length - 4) + "...";
         }
     }
 }

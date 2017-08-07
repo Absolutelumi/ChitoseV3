@@ -11,20 +11,16 @@ namespace Misaki
     {
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
         public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
+        public static readonly string FfmpegPath = Properties.Settings.Default.TempDirectory; 
 
-        public static Collection<SocketMessage> Messages = new Collection<SocketMessage>();
+        public static DiscordSocketClient Client;
 
-        private DiscordSocketClient client;
+        public static Collection<IMessage> Messages = new Collection<IMessage>(); 
 
-        private Commands commands;
-        private DiscordSocketConfig config;
+        private Commands Commands;
+        private DiscordSocketConfig ClientConfig;
 
         public Misaki() => StartAsync().GetAwaiter().GetResult();
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
 
         private int GetUserCount(DiscordSocketClient client)
         {
@@ -40,10 +36,12 @@ namespace Misaki
 
         private async Task InstallCommands()
         {
-            commands = new Commands(client);
+            Commands = new Commands();
 
-            await commands.Install();
+            await Commands.Install();
         }
+
+        public void Dispose() => GC.SuppressFinalize(this); 
 
         private Task Logger(LogMessage e)
         {
@@ -75,29 +73,30 @@ namespace Misaki
 
         private async Task StartAsync()
         {
-            config = new DiscordSocketConfig()
+            ClientConfig = new DiscordSocketConfig()
             {
                 DefaultRetryMode = RetryMode.AlwaysRetry,
                 LogLevel = LogSeverity.Info
             };
-            client = new DiscordSocketClient(config);
+            Client = new DiscordSocketClient(ClientConfig);
 
-            client.Log += Logger;
+            Client.Log += Logger;
 
-            await client.LoginAsync(TokenType.Bot, Keys.DiscordToken);
-            await client.StartAsync();   
+            await Client.LoginAsync(TokenType.Bot, Keys.DiscordToken);
+            await Client.StartAsync();
 
-            client.Ready += () =>
+            Client.Ready += async () =>
             {
                 Console.WriteLine("Misaki has now connected to:");
-                Console.WriteLine(string.Join(", ", client.Guilds));
-                int users = GetUserCount(client);
-                client.SetGameAsync($"Serving {users} bakas");
-                InstallCommands().GetAwaiter();
-                return Task.CompletedTask;
+                Console.WriteLine(string.Join(", ", Client.Guilds));
+
+                await InstallCommands();
+
+                int users = GetUserCount(Client);
+                await Client.SetGameAsync($"Serving {users} bakas");
             };
 
-            client.MessageReceived += (msg) =>
+            Client.MessageReceived += (msg) =>
             {
                 Messages.Add(msg);
                 return Task.CompletedTask;

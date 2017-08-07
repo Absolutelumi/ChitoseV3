@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Misaki.Services
 {
-    public class AdminService
+    public class NSFWService
     {
-
+        
     }
 }

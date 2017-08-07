@@ -14,7 +14,7 @@ namespace Misaki.Modules
 {
     public class AutoManageVoiceChan : ModuleBase
     {
-        public AutoVoiceManageService VoiceServ { get; set; }
+        public VoiceManageService VoiceServ { get; set; }
 
         [Command("automanagevoice"), Summary("Auto moderates voice channels for practical uses")]
         public async Task AutoManageVoiceChannels()
@@ -27,7 +27,7 @@ namespace Misaki.Modules
                 return;
             }
 
-            VoiceServ.AddGuild(Context.Guild); 
+            VoiceServ.AddGuild(Context.Guild);
 
             await VoiceServ.RemoveAndAddDefaultVC(Context.Guild);
 
