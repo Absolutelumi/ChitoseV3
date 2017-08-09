@@ -102,6 +102,9 @@
     <Reference Include="ImageProcessor, Version=2.5.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ImageProcessor.2.5.4\lib\net45\ImageProcessor.dll</HintPath>
     </Reference>
+    <Reference Include="Imgur.API, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Imgur.API.4.0.1\lib\net45\Imgur.API.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.DependencyInjection.2.0.0-preview2-final\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
@@ -111,8 +114,8 @@
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\NAudio.1.8.1\lib\net35\NAudio.dll</HintPath>
+    <Reference Include="NAudio, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\NAudio.1.8.2\lib\net35\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -217,16 +220,19 @@
     <Compile Include="Modules\Music.cs" />
     <Compile Include="Modules\NSFW.cs" />
     <Compile Include="Modules\OsuScoreUpload.cs" />
+    <Compile Include="Modules\Pubg.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\Enums.cs" />
     <Compile Include="Objects\Keys.cs" />
+    <Compile Include="Objects\NsfwManager.cs" />
+    <Compile Include="Objects\Poll.cs" />
     <Compile Include="Objects\ScoreImage.cs" />
     <Compile Include="Objects\TypeReaders.cs" />
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AnimeService.cs" />
+    <Compile Include="Services\PubgService.cs" />
     <Compile Include="Services\RoleManageService.cs" />
     <Compile Include="Services\AnnounceService.cs" />
-    <Compile Include="Services\VoiceManageService.cs" />
     <Compile Include="Services\MalService.cs" />
     <Compile Include="Services\MusicService.cs" />
     <Compile Include="Services\NSFWService.cs" />
@@ -242,6 +248,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Services\OsuService.cs" />
+    <Compile Include="Services\VoiceManageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -255,6 +262,10 @@
     <ProjectReference Include="..\..\Osu-Sharp\OsuApi\OsuApi.csproj">
       <Project>{426b006f-2c0c-4f3c-8698-ce60d4b4b1d9}</Project>
       <Name>OsuApi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PUBGSharp-master\PUBGSharp\PUBGSharp.csproj">
+      <Project>{b622b2d0-dc5a-40ad-b608-477cae002072}</Project>
+      <Name>PUBGSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -25,5 +25,22 @@ namespace Misaki.Modules
             if (Context.Guild.Name != "Too Too Roo") return;
             await ReplyAsync(OsuScoreServ.Unfollow(user).Result);
         }
+
+        [Command("followlist"), Summary("Shows list of followed")]
+        public async Task GetFollowList()
+        {
+            if (Context.Guild.Name != "Too Too Roo") return;
+            await ReplyAsync($"Currently followed users: {string.Join(", ", OsuScoreServ.GetFollowedUsers())}"); 
+        }
+
+        [Command("latestupdate"), Summary("Gets latest update for user")]
+        public async Task GetLatestUpdate([Remainder] string user)
+        {
+            var pair = OsuScoreServ.GetLatestUpdate(user);
+
+            if (pair == null) await ReplyAsync("User not found!");
+
+            else await ReplyAsync($"{pair?.Key} was last updated on {pair?.Value}");
+        }
     }
 }

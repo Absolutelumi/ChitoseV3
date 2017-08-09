@@ -79,7 +79,7 @@ namespace Misaki.Services
                         }
                     }
                 }
-                catch (Exception e) { Extensions.ManageException(e); }
+                catch { }
             }
         }
 
@@ -109,6 +109,14 @@ namespace Misaki.Services
         private void SaveLatestUpdates()
         {
             File.WriteAllLines(OsuScorePath, LatestUpdate.Select(update => $"{update.Key},{update.Value}"));
+        }
+
+        public string[] GetFollowedUsers() => LatestUpdate.Keys.ToArray();
+
+        public KeyValuePair<string, DateTime>? GetLatestUpdate(string user)
+        {
+            if (LatestUpdate.Keys.Any(username => username.ToLower() == user.ToLower())) return LatestUpdate.Where(e => e.Key.ToLower() == user.ToLower()).First();
+            else return null;
         }
     }
 }

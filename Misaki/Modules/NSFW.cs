@@ -1,9 +1,5 @@
 ﻿using Discord.Commands;
 using Misaki.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Misaki.Modules
@@ -15,7 +11,19 @@ namespace Misaki.Modules
         [Command("rule34")]
         public async Task Rule34(string param)
         {
+            await ReplyAsync("Not yet implemented"); 
+        }
 
+        [Command("i")]
+        public async Task GetRandomHentaiPic()
+        {
+            await ReplyAsync(NsfwService.GetHentaiPic());
+        }
+
+        [Command("nsfw")]
+        public async Task SetNSFW(string channel, string enable)
+        {
+            
         }
     }
 }
