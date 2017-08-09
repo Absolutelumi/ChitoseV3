@@ -23,5 +23,14 @@
     <Setting Name="HostingUserId" Type="System.UInt64" Scope="User">
       <Value Profile="(Default)">112300152391294976</Value>
     </Setting>
+    <Setting Name="ImgurKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">	8a9957dc0c88c59</Value>
+    </Setting>
+    <Setting Name="ImgurSecret" Type="System.String" Scope="User">
+      <Value Profile="(Default)">728eb23f3aaf0bdc72638a0bd62470ecd0dc5349</Value>
+    </Setting>
+    <Setting Name="PubgKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">03d0f9c6-e89b-4f84-8e63-2287dc35ed08</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

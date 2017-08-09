@@ -106,5 +106,41 @@ namespace Misaki.Properties {
                 this["HostingUserId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\t8a9957dc0c88c59")]
+        public string ImgurKey {
+            get {
+                return ((string)(this["ImgurKey"]));
+            }
+            set {
+                this["ImgurKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("728eb23f3aaf0bdc72638a0bd62470ecd0dc5349")]
+        public string ImgurSecret {
+            get {
+                return ((string)(this["ImgurSecret"]));
+            }
+            set {
+                this["ImgurSecret"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("03d0f9c6-e89b-4f84-8e63-2287dc35ed08")]
+        public string PubgKey {
+            get {
+                return ((string)(this["PubgKey"]));
+            }
+            set {
+                this["PubgKey"] = value;
+            }
+        }
     }
 }

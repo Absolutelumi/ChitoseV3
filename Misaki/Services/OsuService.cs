@@ -13,6 +13,8 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Script.Serialization; 
 using Sd = System.Drawing;
 
@@ -20,7 +22,7 @@ namespace Misaki.Services
 {
     public class OsuService 
     {
-        private DiscordSocketClient client = Misaki.Client;
+        private DiscordSocketClient Client = Misaki.Client;
         private static readonly Api OsuApi = new Api(Keys.OsuApiKey);
         private static readonly ImageAnnotatorClient ImageAnnotatorClient = ImageAnnotatorClient.Create();
         private static readonly JavaScriptSerializer json = new JavaScriptSerializer(); 
@@ -30,18 +32,23 @@ namespace Misaki.Services
 
         public OsuService()
         {
-            client.MessageReceived += async (msg) =>
+            Client.MessageReceived += (msg) =>
             {
-                if (msg.Author.IsBot) return;
+                if (msg.Author.IsBot) return Task.CompletedTask;
                 if (msg.Attachments.Count == 1) lastAttachment = msg.Attachments.First().Url;
-                foreach (BeatmapResult result in ExtractBeatmapsFromText(msg.Content))
+                new Thread(async () =>
                 {
-                    if (result.FullLink == msg.Content) await msg.DeleteAsync();
-                    Beatmap[] beatmaps = await (result.IsSet ? OsuApi.GetBeatmapSet.WithSetId(result.Id).Results() : OsuApi.GetSpecificBeatmap.WithId(result.Id).Results());
-                    if (beatmaps.Length < 1) return;
-                    if (result.IsSet) await msg.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapSetInfo(new BeatmapSet(OsuApi.GetBeatmapSet.WithSetId(result.Id).Results().Result)));
-                    else await msg.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapInfo(OsuApi.GetSpecificBeatmap.WithId(result.Id).Results().Result.First()));
-                }
+                    foreach (BeatmapResult result in ExtractBeatmapsFromText(msg.Content))
+                    {
+                        if (result.FullLink == msg.Content) await msg.DeleteAsync();
+                        Beatmap[] beatmaps = await (result.IsSet ? OsuApi.GetBeatmapSet.WithSetId(result.Id).Results() : OsuApi.GetSpecificBeatmap.WithId(result.Id).Results());
+                        if (beatmaps.Length < 1) return;
+                        if (result.IsSet) await msg.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapSetInfo(new BeatmapSet(OsuApi.GetBeatmapSet.WithSetId(result.Id).Results().Result)));
+                        else await msg.Channel.SendMessageAsync(string.Empty, embed: FormatBeatmapInfo(OsuApi.GetSpecificBeatmap.WithId(result.Id).Results().Result.First()));
+                    }
+                }).Start();
+
+                return Task.CompletedTask;
             };
         }
 

@@ -2,6 +2,9 @@
 using Discord.WebSocket;
 using Misaki.Objects;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -161,6 +164,11 @@ namespace Misaki
         public static T Random<T>(this T[] array)
         {
             return array[rng.Next(array.Length)];
+        }
+
+        public static void Foreach<T>(this IEnumerable<T> source, Action<T> func)
+        {
+            foreach (T element in source) func(element); 
         }
 
         public static string ReadString(this Stream stream)

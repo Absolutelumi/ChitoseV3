@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Misaki", "Misaki.csproj", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuApi", "..\..\Osu-Sharp\OsuApi\OsuApi.csproj", "{426B006F-2C0C-4F3C-8698-CE60D4B4B1D9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PUBGSharp", "..\..\PUBGSharp-master\PUBGSharp\PUBGSharp.csproj", "{B622B2D0-DC5A-40AD-B608-477CAE002072}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{426B006F-2C0C-4F3C-8698-CE60D4B4B1D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{426B006F-2C0C-4F3C-8698-CE60D4B4B1D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{426B006F-2C0C-4F3C-8698-CE60D4B4B1D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B622B2D0-DC5A-40AD-B608-477CAE002072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B622B2D0-DC5A-40AD-B608-477CAE002072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B622B2D0-DC5A-40AD-B608-477CAE002072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B622B2D0-DC5A-40AD-B608-477CAE002072}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
