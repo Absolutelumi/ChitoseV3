@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Linq;
+using Discord.Rest;
 
 namespace Misaki.Objects
 {
@@ -11,7 +12,7 @@ namespace Misaki.Objects
     {
         private DiscordSocketClient client = Misaki.Client;
 
-        private SocketUserMessage PollMessage { get; set; }
+        private IUserMessage PollMessage { get; set; }
 
         private IMessageChannel PollChannel { get; set; }
 
@@ -41,8 +42,8 @@ namespace Misaki.Objects
             }
 
             IGuild guild = client.GetGuild(guildId);
-            Check = guild.Emotes.First(emote => emote.Name == "white_check_mark");
-            CrossOut = guild.Emotes.First(emote => emote.Name == "negative_squared_cross_mark");
+            //Check = guild.Emotes.First(emote => emote.Name == "white_check_mark");
+            //CrossOut = guild.Emotes.First(emote => emote.Name == "negative_squared_cross_mark");
 
             PollQuestion = ModifyQuestion(question);
 
@@ -67,6 +68,7 @@ namespace Misaki.Objects
             client.MessageReceived += (e) =>
             {
                 if (!(e.Channel.Id == PollChannel.Id)) return Task.CompletedTask;
+                if (PollMessage == null) return Task.CompletedTask;
                 if (PollMessage.Reactions.Count() == 0) return Task.CompletedTask;
                 UpdatePoll();
                 return Task.CompletedTask;
@@ -78,9 +80,9 @@ namespace Misaki.Objects
 
         private async void SendAndManagePoll(IMessageChannel channel)
         {
-            PollMessage = await channel.SendMessageAsync("", embed: PollEmbed) as SocketUserMessage;
-            await PollMessage.AddReactionAsync(Check);
-            await PollMessage.AddReactionAsync(CrossOut);
+            PollMessage = await channel.SendMessageAsync("", embed: PollEmbed);
+            await PollMessage.AddReactionAsync(new Emoji("\u2705"));
+            await PollMessage.AddReactionAsync(new Emoji("\u274E"));
             PollTimer.Start();
         }
 

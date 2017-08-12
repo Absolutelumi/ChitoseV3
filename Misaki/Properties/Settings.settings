@@ -6,13 +6,13 @@
       <Value Profile="(Default)">MzQwODQ0NjE3NzA2NjM1Mjcz.DF4bzA.lmxxXUzpVzL-geBCQ84lc3nCSCg</Value>
     </Setting>
     <Setting Name="ConfigDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">H:\Projects\Bot\Config\</Value>
+      <Value Profile="(Default)">C:\Users\Samuel\Documents\Bot\Config\</Value>
     </Setting>
     <Setting Name="OsuApiKey" Type="System.String" Scope="User">
       <Value Profile="(Default)">27ce8543aa8a418a04336ffb519c898e25e2b9b2</Value>
     </Setting>
     <Setting Name="TempDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">H:\Projects\Bot\Temp\</Value>
+      <Value Profile="(Default)">C:\Users\Samuel\Documents\Bot\Temp\</Value>
     </Setting>
     <Setting Name="MALPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">wpck2vbZjN2A</Value>

@@ -37,7 +37,7 @@ namespace Misaki.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("H:\\Projects\\Bot\\Config\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Samuel\\Documents\\Bot\\Config\\")]
         public string ConfigDirectory {
             get {
                 return ((string)(this["ConfigDirectory"]));
@@ -61,7 +61,7 @@ namespace Misaki.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("H:\\Projects\\Bot\\Temp\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Samuel\\Documents\\Bot\\Temp\\")]
         public string TempDirectory {
             get {
                 return ((string)(this["TempDirectory"]));
