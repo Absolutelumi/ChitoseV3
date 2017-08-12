@@ -29,19 +29,26 @@ namespace Misaki.Services
                 if (Guilds.Contains(current.VoiceChannel.Guild.Id.ToString())) await UpdateVC(current.VoiceChannel);
             };
 
+            Timer timer = new Timer(1000);
+            timer.AutoReset = true;
+            timer.Elapsed += async (_, __) =>
+            {
+                foreach (var guild in Guilds)
+                {
+                    foreach (var VC in client.GetGuild(ulong.Parse(guild)).VoiceChannels)
+                    {
+                        await UpdateVC(VC);
+                    }
+                }
+            };
+            timer.Start();
+
             client.GuildMemberUpdated += async (oldState, newState) =>
             {
                 if (oldState.Game?.Name == newState.Game?.Name) return;
                 if (newState.VoiceChannel == null) return;
                 await UpdateVC(newState.VoiceChannel); 
             };
-
-            using (Timer timer = new Timer(600000))
-            {
-                timer.AutoReset = true;
-                timer.Elapsed += (_, __) => UpdateAllVC(client).GetAwaiter();
-                timer.Start();
-            }
         }
 
         public void AddGuild(IGuild guild)
