@@ -4,18 +4,17 @@ using PUBGSharp;
 using PUBGSharp.Data;
 using PUBGSharp.Net.Model;
 using System.Linq;
-using System;
 
 namespace Misaki.Services
 {
     public class PubgService
     {
-        public Embed GetUserInfo(string username)
+        public Embed GetUserInfo(string username, Mode mode)
         {
             var user = new PUBGStatsClient(Keys.PubgKey).GetPlayerStatsAsync(username).Result;
             string[] relevantStats = { "Kills", "Win %", "Loesses", "Rating", "Top 10s", "K/D Ratio", "Longest Kill", "Round Most Kills", "Assists" }; 
             string statsString = default(string);
-            user.Stats.Find(e => e.Region == Region.NA).Stats.OrderBy<StatModel, int>(e => e.Stat.Count()).Foreach(e =>
+            user.Stats.Find(e => e.Mode == mode && e.Region == Region.NA).Stats.OrderBy<StatModel, int>(e => e.Stat.Count()).Foreach(e =>
             {
                 if (e.Rank.HasValue && relevantStats.Contains(e.Stat)) statsString = statsString + $"{e.Stat}  -  #{e.Rank}  -  {e.Value} \n";
             });

@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Misaki.Services;
+using PUBGSharp.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace Misaki.Modules
         public PubgService pubgService { get; set; }
 
         [Command("pubg")]
-        public async Task GetProfileStats(string user)
+        public async Task GetProfileStats(string user, Mode mode = Mode.Solo)
         {
-            await ReplyAsync(string.Empty, embed: pubgService.GetUserInfo(user));
+            await ReplyAsync(string.Empty, embed: pubgService.GetUserInfo(user, mode));
         }
     }
 }

@@ -53,9 +53,7 @@ namespace Misaki.Objects
 
             if (!result.IsSuccess)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{message} => {result.ErrorReason}");
-                Console.ForegroundColor = ConsoleColor.White;
+                await context.Channel.SendMessageAsync(result.ErrorReason);
             }
         }
 

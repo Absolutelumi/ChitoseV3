@@ -220,6 +220,7 @@
     <Compile Include="Modules\Music.cs" />
     <Compile Include="Modules\NSFW.cs" />
     <Compile Include="Modules\OsuScoreUpload.cs" />
+    <Compile Include="Modules\PollModule.cs" />
     <Compile Include="Modules\Pubg.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\Enums.cs" />
