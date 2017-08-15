@@ -1,26 +1,27 @@
-﻿using Misaki.Objects; 
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
+using Misaki.Objects;
 using System;
-using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Misaki
 {
     public class Misaki : IDisposable
     {
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
+        public static readonly string FfmpegPath = Properties.Settings.Default.TempDirectory;
         public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
-        public static readonly string FfmpegPath = Properties.Settings.Default.TempDirectory; 
-
         public static DiscordSocketClient Client;
 
-        public static Collection<IMessage> Messages = new Collection<IMessage>(); 
+        public static Collection<IMessage> Messages = new Collection<IMessage>();
 
-        private Commands Commands;
-        private DiscordSocketConfig ClientConfig;
+        public Commands Commands;
+        private DiscordSocketConfig clientConfig;
 
         public Misaki() => StartAsync().GetAwaiter().GetResult();
+
+        public void Dispose() => GC.SuppressFinalize(this);
 
         private int GetUserCount(DiscordSocketClient client)
         {
@@ -33,15 +34,6 @@ namespace Misaki
 
             return users;
         }
-
-        private async Task InstallCommands()
-        {
-            Commands = new Commands();
-
-            await Commands.Install();
-        }
-
-        public void Dispose() => GC.SuppressFinalize(this); 
 
         private Task Logger(LogMessage e)
         {
@@ -73,12 +65,12 @@ namespace Misaki
 
         private async Task StartAsync()
         {
-            ClientConfig = new DiscordSocketConfig()
+            clientConfig = new DiscordSocketConfig()
             {
                 DefaultRetryMode = RetryMode.AlwaysRetry,
                 LogLevel = LogSeverity.Info
             };
-            Client = new DiscordSocketClient(ClientConfig);
+            Client = new DiscordSocketClient(clientConfig);
 
             Client.Log += Logger;
 
@@ -90,7 +82,8 @@ namespace Misaki
                 Console.WriteLine("Misaki has now connected to:");
                 Console.WriteLine(string.Join(", ", Client.Guilds));
 
-                await InstallCommands();
+                Commands = new Commands();
+                await Commands.Install();
 
                 int users = GetUserCount(Client);
                 await Client.SetGameAsync($"Serving {users} bakas");

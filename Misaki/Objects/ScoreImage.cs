@@ -1,10 +1,9 @@
-﻿using OsuApi.Model;
+﻿using ImageProcessor;
+using OsuApi.Model;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using ImageProcessor;
 
 namespace Misaki.Objects
 {
@@ -165,9 +164,9 @@ namespace Misaki.Objects
             SizeF difficultySize = graphics.MeasureString(difficultyString, titleFont);
             SizeF titleSize = graphics.MeasureString(title, titleFont);
             SizeF starSize = graphics.MeasureString($" {stars}★", titleFont);
-            float usedWidth = difficultySize.Width + titleSize.Width + starSize.Width; 
+            float usedWidth = difficultySize.Width + titleSize.Width + starSize.Width;
             if (usedWidth > maxWidth && difficultySize.Width > titleSize.Width) difficultyString = $"[{Trim(difficultyString, usedWidth, graphics, titleFont)}]";
-            if (usedWidth > maxWidth && difficultySize.Width < titleSize.Width) title = Trim(title, usedWidth, graphics, titleFont); 
+            if (usedWidth > maxWidth && difficultySize.Width < titleSize.Width) title = Trim(title, usedWidth, graphics, titleFont);
             titlePath.AddString(title + " " + difficultyString + $" {stars}★", titleFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 60 / 150, new Point(15, 10), titleFormat);
             graphics.DrawPath(WhitePen, titlePath);
             graphics.FillPath(BlueBrush, titlePath);
@@ -234,7 +233,7 @@ namespace Misaki.Objects
         private static string Trim(string text, float usedWidth, Graphics graphics, Font font)
         {
             float maxWidth = BackgroundWidth - 40 - StrokeWidth * 2;
-            float widthWithoutText = usedWidth - graphics.MeasureString(text, font).Width; 
+            float widthWithoutText = usedWidth - graphics.MeasureString(text, font).Width;
 
             while (graphics.MeasureString(text, font).Width + widthWithoutText > maxWidth)
             {
@@ -245,4 +244,3 @@ namespace Misaki.Objects
         }
     }
 }
-

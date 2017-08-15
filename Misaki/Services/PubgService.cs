@@ -12,7 +12,7 @@ namespace Misaki.Services
         public Embed GetUserInfo(string username, Mode mode)
         {
             var user = new PUBGStatsClient(Keys.PubgKey).GetPlayerStatsAsync(username).Result;
-            string[] relevantStats = { "Kills", "Win %", "Loesses", "Rating", "Top 10s", "K/D Ratio", "Longest Kill", "Round Most Kills", "Assists" }; 
+            string[] relevantStats = { "Kills", "Win %", "Loesses", "Rating", "Top 10s", "K/D Ratio", "Longest Kill", "Round Most Kills", "Assists" };
             string statsString = default(string);
             user.Stats.Find(e => e.Mode == mode && e.Region == Region.NA).Stats.OrderBy<StatModel, int>(e => e.Stat.Count()).Foreach(e =>
             {

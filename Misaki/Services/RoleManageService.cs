@@ -1,16 +1,11 @@
-﻿using Discord;
-using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
+﻿using Discord.WebSocket;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Misaki.Services
 {
     public class RoleManageService
     {
-        private DiscordSocketClient client = Misaki.Client; 
+        private DiscordSocketClient client = Misaki.Client;
 
         public RoleManageService()
         {
@@ -19,7 +14,7 @@ namespace Misaki.Services
                 SocketGuild guild = user.Guild;
                 SocketRole newRole = guild.Roles.Where(role => role.Name == "New").FirstOrDefault();
 
-                if (newRole == null) return; 
+                if (newRole == null) return;
 
                 await user.AddRoleAsync(newRole);
             };
