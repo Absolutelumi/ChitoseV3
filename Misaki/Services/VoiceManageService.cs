@@ -1,23 +1,20 @@
 ﻿using Discord;
+using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using Discord.WebSocket;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Collections.ObjectModel;
-using Misaki.Objects;
 
 namespace Misaki.Services
 {
-    public class VoiceManageService 
+    public class VoiceManageService
     {
-        private DiscordSocketClient client = Misaki.Client; 
-
         public readonly Collection<string> Guilds = new Collection<string>();
-
         private static readonly string VoicePath = Misaki.ConfigPath + "AutoVoiceGuilds.txt";
+        private DiscordSocketClient client = Misaki.Client;
 
         public VoiceManageService()
         {
@@ -25,7 +22,7 @@ namespace Misaki.Services
 
             client.UserVoiceStateUpdated += async (_, previous, current) =>
             {
-                if (Guilds.Contains(previous.VoiceChannel.Guild.Id.ToString())) await UpdateVC(previous.VoiceChannel); 
+                if (Guilds.Contains(previous.VoiceChannel.Guild.Id.ToString())) await UpdateVC(previous.VoiceChannel);
                 if (Guilds.Contains(current.VoiceChannel.Guild.Id.ToString())) await UpdateVC(current.VoiceChannel);
             };
 
@@ -47,12 +44,12 @@ namespace Misaki.Services
             {
                 if (oldState.Game?.Name == newState.Game?.Name) return;
                 if (newState.VoiceChannel == null) return;
-                await UpdateVC(newState.VoiceChannel); 
+                await UpdateVC(newState.VoiceChannel);
             };
         }
 
         public void AddGuild(IGuild guild)
-        { 
+        {
             using (FileStream stream = File.Open(VoicePath, FileMode.Truncate, FileAccess.Write))
             using (StreamWriter streamWriter = new StreamWriter(stream))
             {
@@ -69,7 +66,7 @@ namespace Misaki.Services
             }
 
             int numberOfUsers = guild.GetUsersAsync().Result.Count;
-            double defaultVoiceChannelCount = Math.Max(Math.Round(numberOfUsers / 10.0), 2.0); 
+            double defaultVoiceChannelCount = Math.Max(Math.Round(numberOfUsers / 10.0), 2.0);
             for (; defaultVoiceChannelCount > 0; defaultVoiceChannelCount--)
             {
                 await guild.CreateVoiceChannelAsync("Lobby");
@@ -84,7 +81,7 @@ namespace Misaki.Services
 
             await guild.ModifyAsync(modifyAFK);
 
-            foreach (IVoiceChannel VC in guild.GetVoiceChannelsAsync().Result) await UpdateVC(VC); 
+            foreach (IVoiceChannel VC in guild.GetVoiceChannelsAsync().Result) await UpdateVC(VC);
         }
 
         public async Task UpdateAllVC(DiscordSocketClient client)
@@ -98,13 +95,13 @@ namespace Misaki.Services
 
         public async Task UpdateVC(IVoiceChannel VC)
         {
-            string defaultVCName = $"Lobby {VC.Position + 1}"; 
-            int watchinPos = VC.Guild.GetVoiceChannelsAsync().Result.Where(chan => chan.Name == "Watchin").FirstOrDefault().Position; 
+            string defaultVCName = $"Lobby {VC.Position + 1}";
+            int watchinPos = VC.Guild.GetVoiceChannelsAsync().Result.Where(chan => chan.Name == "Watchin").FirstOrDefault().Position;
             if (watchinPos <= VC.Position) return;
 
             IReadOnlyCollection<IUser> users = await VC.GetUsersAsync().FirstOrDefault();
 
-            if (users.Count == 0 && VC.Name == defaultVCName) return; 
+            if (users.Count == 0 && VC.Name == defaultVCName) return;
 
             string newName = users.Count == 0 ? defaultVCName : users.First().Game?.Name ?? defaultVCName;
 

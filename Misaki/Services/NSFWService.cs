@@ -1,8 +1,8 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using Misaki.Objects;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
+using Misaki.Objects;
 using System.IO;
 using System.Linq;
 
@@ -26,7 +26,7 @@ namespace Misaki.Services
             string albumId = RandomAlbum();
             var resultAlbum = Endpoint.GetAlbumAsync(albumId, "Absolutelumi").Result;
 
-            return resultAlbum.Images.ToArray().Random().ToString(); 
+            return resultAlbum.Images.ToArray().Random().ToString();
         }
 
         private string RandomAlbum()

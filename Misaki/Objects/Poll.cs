@@ -3,34 +3,27 @@ using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Linq;
-using Discord.Rest;
 
 namespace Misaki.Objects
 {
     public class Poll
     {
+        private static readonly IEmote Check = new Emoji("\u2705");
+        private static readonly IEmote CrossOut = new Emoji("\u274E");
         private DiscordSocketClient client = Misaki.Client;
 
-        private IUserMessage PollMessage { get; set; }
-
+        private int Downvotes { get; set; }
         private IMessageChannel PollChannel { get; set; }
-
         private Embed PollEmbed { get; set; }
-
+        private IUserMessage PollMessage { get; set; }
         private string PollQuestion { get; set; }
 
         private int PollTime { get; set; }
 
         private Timer PollTimer { get; set; }
-
-        private IEmote Check { get; set; }
-        private IEmote CrossOut { get; set; }
-
         private int Upvotes { get; set; }
-        private int Downvotes { get; set; }
 
-        public Poll(ulong guildId, IMessageChannel channel, IUser user, string question, int minutes)
+        public Poll(IMessageChannel channel, IUser user, string question, int minutes)
         {
             if (question == null)
             {
@@ -40,10 +33,6 @@ namespace Misaki.Objects
                 .Build()).GetAwaiter();
                 return;
             }
-
-            IGuild guild = client.GetGuild(guildId);
-            //Check = guild.Emotes.First(emote => emote.Name == "white_check_mark");
-            //CrossOut = guild.Emotes.First(emote => emote.Name == "negative_squared_cross_mark");
 
             PollQuestion = ModifyQuestion(question);
 
@@ -65,31 +54,16 @@ namespace Misaki.Objects
             };
             PollTimer.Elapsed += (_, __) => EndPoll();
 
-            client.MessageReceived += (e) =>
-            {
-                if (!(e.Channel.Id == PollChannel.Id)) return Task.CompletedTask;
-                if (PollMessage == null) return Task.CompletedTask;
-                if (PollMessage.Reactions.Count() == 0) return Task.CompletedTask;
-                UpdatePoll();
-                return Task.CompletedTask;
-            };
+            client.ReactionAdded += HandleReactionAdded;
+            client.ReactionRemoved += HandleReactionRemoved;
 
             PollChannel = channel;
             SendAndManagePoll(channel);
         }
 
-        private async void SendAndManagePoll(IMessageChannel channel)
+        private void DeletePoll()
         {
-            PollMessage = await channel.SendMessageAsync("", embed: PollEmbed);
-            await PollMessage.AddReactionAsync(new Emoji("\u2705"));
-            await PollMessage.AddReactionAsync(new Emoji("\u274E"));
-            PollTimer.Start();
-        }
-
-        private void UpdatePoll()
-        {
-            Upvotes = PollMessage.Reactions.Keys.Where(emote => emote.Name == "").Count();
-            Downvotes = PollMessage.Reactions.Keys.Where(emote => emote.Name == "").Count();
+            GC.SuppressFinalize(this);
         }
 
         private async void EndPoll()
@@ -97,7 +71,7 @@ namespace Misaki.Objects
             await PollMessage.ModifyAsync(msg =>
             {
                 msg.Embed = new EmbedBuilder()
-                .WithTitle($"Poll now over! The people have voted that the answer to {PollQuestion} is {GetAnswer()}")
+                .WithTitle($"Poll now over! The people have voted that the answer to \"{PollQuestion}\" is {GetAnswer()}!")
                 .Build();
             });
         }
@@ -109,6 +83,22 @@ namespace Misaki.Objects
             return "undecided";
         }
 
+        private Task HandleReactionAdded(Cacheable<IUserMessage, ulong> messages, ISocketMessageChannel channel, SocketReaction reaction)
+        {
+            if (!(channel.Id == PollChannel.Id)) return Task.CompletedTask;
+            if (PollMessage == null) return Task.CompletedTask;
+            UpdatePoll(reaction, true);
+            return Task.CompletedTask;
+        }
+
+        private Task HandleReactionRemoved(Cacheable<IUserMessage, ulong> messages, ISocketMessageChannel channel, SocketReaction reaction)
+        {
+            if (!(channel.Id == PollChannel.Id)) return Task.CompletedTask;
+            if (PollMessage == null) return Task.CompletedTask;
+            UpdatePoll(reaction, false);
+            return Task.CompletedTask;
+        }
+
         private string ModifyQuestion(string question)
         {
             if (question[question.Length - 1] != '?') question += "?";
@@ -116,9 +106,20 @@ namespace Misaki.Objects
             return question;
         }
 
-        private void DeletePoll()
+        private async void SendAndManagePoll(IMessageChannel channel)
         {
-            GC.SuppressFinalize(this);
+            string pollString = PollChannel.Name == "announcements" ? "@everyone" : "";
+            PollMessage = await channel.SendMessageAsync(pollString, embed: PollEmbed);
+            await PollMessage.AddReactionAsync(Check);
+            await PollMessage.AddReactionAsync(CrossOut);
+            PollTimer.Start();
+        }
+
+        private void UpdatePoll(IReaction reaction, bool isAdding)
+        {
+            int delta = isAdding ? 1 : -1;
+            if (reaction.Emote.Name == Check.Name) Upvotes += delta;
+            if (reaction.Emote.Name == CrossOut.Name) Downvotes += delta;
         }
     }
 }

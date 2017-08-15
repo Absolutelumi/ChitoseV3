@@ -217,6 +217,7 @@
     <Compile Include="Misaki.cs" />
     <Compile Include="Modules\Anime.cs" />
     <Compile Include="Modules\AutoManageVoiceChan.cs" />
+    <Compile Include="Modules\Help.cs" />
     <Compile Include="Modules\Music.cs" />
     <Compile Include="Modules\NSFW.cs" />
     <Compile Include="Modules\OsuScoreUpload.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Modules\Pubg.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\Enums.cs" />
+    <Compile Include="Objects\HelpMenu.cs" />
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\NsfwManager.cs" />
     <Compile Include="Objects\Poll.cs" />

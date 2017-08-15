@@ -8,22 +8,21 @@ namespace Misaki.Modules
     {
         public NSFWService NsfwService { get; set; }
 
-        [Command("rule34")]
-        public async Task Rule34(string param)
-        {
-            await ReplyAsync("Not yet implemented"); 
-        }
-
         [Command("i")]
         public async Task GetRandomHentaiPic()
         {
             await ReplyAsync(NsfwService.GetHentaiPic());
         }
 
+        [Command("rule34")]
+        public async Task Rule34(string param)
+        {
+            await ReplyAsync("Not yet implemented");
+        }
+
         [Command("nsfw")]
         public async Task SetNSFW(string channel, string enable)
         {
-            
         }
     }
 }

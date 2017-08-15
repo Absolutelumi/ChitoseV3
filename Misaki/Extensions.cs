@@ -1,10 +1,6 @@
-﻿using Discord;
-using Discord.WebSocket;
-using Misaki.Objects;
+﻿using Discord.WebSocket;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -24,7 +20,7 @@ namespace Misaki
 
         static Extensions()
         {
-            Client = Misaki.Client; 
+            Client = Misaki.Client;
         }
 
         /// <summary>
@@ -43,32 +39,6 @@ namespace Misaki
 
             int stepsToSame = ComputeLevenshteinDistance(source, target);
             return 1.0 - ((double)stepsToSame / Math.Max(source.Length, target.Length));
-        }
-
-        public static string GetDescription<T>(this T enumerationValue)
-    where T : struct
-        {
-            Type type = enumerationValue.GetType();
-            if (!type.IsEnum)
-            {
-                throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
-            }
-
-            //Tries to find a DescriptionAttribute for a potential friendly name
-            //for the enum
-            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
-            if (memberInfo != null && memberInfo.Length > 0)
-            {
-                object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-
-                if (attrs != null && attrs.Length > 0)
-                {
-                    //Pull out the description value
-                    return ((DescriptionAttribute)attrs[0]).Description;
-                }
-            }
-            //If we have no description attribute, just return the ToString of the enum
-            return enumerationValue.ToString();
         }
 
         public static string CleanFileName(string filename)
@@ -123,85 +93,16 @@ namespace Misaki
             return distance[sourceWordCount, targetWordCount];
         }
 
-        public static Stream GetHttpStream(Uri uri)
-        {
-            HttpWebRequest getRequest = WebRequest.CreateHttp(uri);
-            getRequest.Method = "GET";
-            WebResponse response = getRequest.GetResponse();
-            using (var responseStream = response.GetResponseStream())
-            {
-                var outputStream = new MemoryStream();
-                responseStream.CopyTo(outputStream);
-                outputStream.Position = 0;
-                return outputStream;
-            }
-        }
-
-        public static string GetPicture(string url)
-        {
-            using (var webClient = new WebClient())
-            {
-                webClient.DownloadFile(url, Misaki.TempPath + "temp.png");
-            }
-            return Misaki.TempPath + "temp.png";
-        }
-
-        public static string HtmlDecode(this string text)
-        {
-            return HttpUtility.HtmlDecode(text);
-        }
-
-        public static T Max<T>(params T[] values)
-        {
-            return values.Max();
-        }
-
-        public static T Min<T>(params T[] values)
-        {
-            return values.Min();
-        }
-
-        public static T Random<T>(this T[] array)
-        {
-            return array[rng.Next(array.Length)];
-        }
-
         public static void Foreach<T>(this IEnumerable<T> source, Action<T> func)
         {
-            foreach (T element in source) func(element); 
-        }
-
-        public static string ReadString(this Stream stream)
-        {
-            return new StreamReader(stream).ReadToEnd();
-        }
-
-        public static bool StartsWithVowelSound(this int number)
-        {
-            if (number <= 0)
-                return false;
-            while (number >= 1000)
-            {
-                number /= 1000;
-            }
-            return number.ToString()[0] == '8' || number == 11;
-        }
-
-        public static string ToTitleCase(this string text)
-        {
-            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text);
-        }
-
-        public static string UrlEncode(this string text)
-        {
-            return HttpUtility.UrlEncode(text);
+            foreach (T element in source) func(element);
         }
 
         public static System.Drawing.Color GetBestColor(string url)
         {
-            Bitmap image = new Bitmap(GetPicture(url)); 
+            Bitmap image = new Bitmap(GetPicture(url));
             const int range = 8;
-            int numberOfCategories = (int)Math.Ceiling(256.0 / range); 
+            int numberOfCategories = (int)Math.Ceiling(256.0 / range);
             double[,,] colorCounts = new double[numberOfCategories, numberOfCategories, numberOfCategories];
             int[] bestColor = new int[3];
             double bestCount = 0;
@@ -235,12 +136,107 @@ namespace Misaki
             int bestBlue = bestColor[2] * range + range / 2;
             return System.Drawing.Color.FromArgb(bestRed, bestGreen, bestBlue);
         }
-        
+
+        public static string GetDescription<T>(this T enumerationValue)
+                                    where T : struct
+        {
+            Type type = enumerationValue.GetType();
+            if (!type.IsEnum)
+            {
+                throw new ArgumentException("EnumerationValue must be of Enum type", "enumerationValue");
+            }
+
+            //Tries to find a DescriptionAttribute for a potential friendly name
+            //for the enum
+            MemberInfo[] memberInfo = type.GetMember(enumerationValue.ToString());
+            if (memberInfo != null && memberInfo.Length > 0)
+            {
+                object[] attrs = memberInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+                if (attrs != null && attrs.Length > 0)
+                {
+                    //Pull out the description value
+                    return ((DescriptionAttribute)attrs[0]).Description;
+                }
+            }
+            //If we have no description attribute, just return the ToString of the enum
+            return enumerationValue.ToString();
+        }
+
+        public static Stream GetHttpStream(Uri uri)
+        {
+            HttpWebRequest getRequest = WebRequest.CreateHttp(uri);
+            getRequest.Method = "GET";
+            WebResponse response = getRequest.GetResponse();
+            using (var responseStream = response.GetResponseStream())
+            {
+                var outputStream = new MemoryStream();
+                responseStream.CopyTo(outputStream);
+                outputStream.Position = 0;
+                return outputStream;
+            }
+        }
+
+        public static string GetPicture(string url)
+        {
+            using (var webClient = new WebClient())
+            {
+                webClient.DownloadFile(url, Misaki.TempPath + "temp.png");
+            }
+            return Misaki.TempPath + "temp.png";
+        }
+
+        public static string HtmlDecode(this string text)
+        {
+            return HttpUtility.HtmlDecode(text);
+        }
+
         public static void ManageException(Exception e)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow; 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Exception thrown - {e.Message}");
-            Console.ResetColor(); 
+            Console.ResetColor();
+        }
+
+        public static T Max<T>(params T[] values)
+        {
+            return values.Max();
+        }
+
+        public static T Min<T>(params T[] values)
+        {
+            return values.Min();
+        }
+
+        public static T Random<T>(this T[] array)
+        {
+            return array[rng.Next(array.Length)];
+        }
+
+        public static string ReadString(this Stream stream)
+        {
+            return new StreamReader(stream).ReadToEnd();
+        }
+
+        public static bool StartsWithVowelSound(this int number)
+        {
+            if (number <= 0)
+                return false;
+            while (number >= 1000)
+            {
+                number /= 1000;
+            }
+            return number.ToString()[0] == '8' || number == 11;
+        }
+
+        public static string ToTitleCase(this string text)
+        {
+            return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(text);
+        }
+
+        public static string UrlEncode(this string text)
+        {
+            return HttpUtility.UrlEncode(text);
         }
     }
 }

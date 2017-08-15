@@ -1,13 +1,12 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using System.Linq; 
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace Misaki.Services
 {
     public class AnnounceService
     {
-        private DiscordSocketClient client = Misaki.Client; 
+        private DiscordSocketClient client = Misaki.Client;
 
         public AnnounceService()
         {
