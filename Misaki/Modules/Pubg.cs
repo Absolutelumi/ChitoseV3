@@ -2,6 +2,7 @@
 using Misaki.Services;
 using PUBGSharp.Data;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Misaki.Modules
 {
@@ -12,7 +13,10 @@ namespace Misaki.Modules
         [Command("pubg")]
         public async Task GetProfileStats(string user, Mode mode = Mode.Solo)
         {
-            await ReplyAsync(string.Empty, embed: pubgService.GetUserInfo(user, mode));
+            new Thread(async () =>
+            {
+                await ReplyAsync(string.Empty, embed: pubgService.GetUserInfo(user, mode));
+            }).Start();
         }
     }
 }
