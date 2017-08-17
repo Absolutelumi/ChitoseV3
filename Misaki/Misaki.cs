@@ -58,7 +58,7 @@ namespace Misaki
                     break;
             }
             Console.WriteLine($"{DateTime.Now,-19} [{e.Severity,8}] {e.Source}: {e.Message}");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ResetColor();
 
             return Task.CompletedTask;
         }
