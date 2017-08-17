@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Misaki.Services
 {
@@ -10,26 +11,32 @@ namespace Misaki.Services
 
         public AnnounceService()
         {
-            client.UserJoined += async (user) =>
-            {
-                IMessageChannel announceChannel = user.Guild.Channels.Where(chan => chan.Name == "announcements").FirstOrDefault() as IMessageChannel;
+            client.UserJoined += HandleUserJoined;
 
-                await announceChannel.SendMessageAsync($"{user.Username} has joined the server!");
-            };
+            client.UserLeft += HandleUserLeft;
 
-            client.UserLeft += async (user) =>
-            {
-                IMessageChannel announceChannel = user.Guild.Channels.Where(chan => chan.Name == "announcements").FirstOrDefault() as IMessageChannel;
+            client.UserBanned += HandleUserBanned;
+        }
 
-                await announceChannel.SendMessageAsync($"{user.Username} has left the server.");
-            };
+        private async Task HandleUserJoined(SocketGuildUser user)
+        {
+            IMessageChannel announceChannel = user.Guild.Channels.Where(chan => chan.Name == "announcements").FirstOrDefault() as IMessageChannel;
 
-            client.UserBanned += async (user, guild) =>
-            {
-                IMessageChannel announceChannel = guild.Channels.Where(chan => chan.Name == "announcements").FirstOrDefault() as IMessageChannel;
+            await announceChannel.SendMessageAsync($"{user.Username} has joined the server!");
+        }
 
-                await announceChannel.SendMessageAsync($"{user.Username} has been banned from the server.");
-            };
+        private async Task HandleUserLeft(SocketGuildUser user)
+        {
+            IMessageChannel announceChannel = user.Guild.Channels.Where(chan => chan.Name == "announcements").FirstOrDefault() as IMessageChannel;
+
+            await announceChannel.SendMessageAsync($"{user.Username} has left the server.");
+        }
+
+        private async Task HandleUserBanned(SocketUser user, SocketGuild guild)
+        {
+            IMessageChannel announceChannel = guild.Channels.Where(chan => chan.Name == "announcements").FirstOrDefault() as IMessageChannel;
+
+            await announceChannel.SendMessageAsync($"{user.Username} has been banned from the server.");
         }
     }
 }

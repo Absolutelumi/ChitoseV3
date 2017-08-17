@@ -20,13 +20,11 @@ namespace Misaki.Services
         {
             foreach (var guild in File.ReadAllLines(VoicePath)) Guilds.Add(guild);
 
-            client.UserVoiceStateUpdated += async (_, previous, current) =>
-            {
-                if (Guilds.Contains(previous.VoiceChannel.Guild.Id.ToString())) await UpdateVC(previous.VoiceChannel);
-                if (Guilds.Contains(current.VoiceChannel.Guild.Id.ToString())) await UpdateVC(current.VoiceChannel);
-            };
+            // Event for user joined??
+            client.UserVoiceStateUpdated += HandleVoiceStateUpdated;
+            client.GuildMemberUpdated += HandleGuildMemberUpdated;
 
-            Timer timer = new Timer(1000);
+            Timer timer = new Timer(10000);
             timer.AutoReset = true;
             timer.Elapsed += async (_, __) =>
             {
@@ -39,13 +37,19 @@ namespace Misaki.Services
                 }
             };
             timer.Start();
+        }
 
-            client.GuildMemberUpdated += async (oldState, newState) =>
-            {
-                if (oldState.Game?.Name == newState.Game?.Name) return;
-                if (newState.VoiceChannel == null) return;
-                await UpdateVC(newState.VoiceChannel);
-            };
+        private async Task HandleVoiceStateUpdated(SocketUser user, SocketVoiceState previous, SocketVoiceState current)
+        {
+            if (Guilds.Contains(previous.VoiceChannel.Guild.Id.ToString())) await UpdateVC(previous.VoiceChannel);
+            if (Guilds.Contains(current.VoiceChannel.Guild.Id.ToString())) await UpdateVC(current.VoiceChannel);
+        }
+
+        private async Task HandleGuildMemberUpdated(SocketGuildUser oldState, SocketGuildUser newState)
+        {
+            if (oldState.Game?.Name == newState.Game?.Name) return;
+            if (newState.VoiceChannel == null) return;
+            await UpdateVC(newState.VoiceChannel);
         }
 
         public void AddGuild(IGuild guild)
@@ -95,11 +99,12 @@ namespace Misaki.Services
 
         public async Task UpdateVC(IVoiceChannel VC)
         {
-            string defaultVCName = $"Lobby {VC.Position + 1}";
             int watchinPos = VC.Guild.GetVoiceChannelsAsync().Result.Where(chan => chan.Name == "Watchin").FirstOrDefault().Position;
             if (watchinPos <= VC.Position) return;
 
-            IReadOnlyCollection<IUser> users = await VC.GetUsersAsync().FirstOrDefault();
+            string defaultVCName = $"Lobby {VC.Position + 1}";
+
+            var users = await VC.GetUsersAsync().FirstOrDefault();
 
             if (users.Count == 0 && VC.Name == defaultVCName) return;
 

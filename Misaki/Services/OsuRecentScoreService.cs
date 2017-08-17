@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Threading;
 
 namespace Misaki.Services
 {
@@ -26,7 +27,7 @@ namespace Misaki.Services
 
             OsuChannel = Client.GetGuild(220673514720591872).GetChannel(316390541162053634) as IMessageChannel;
 
-            Timer timer = new Timer(1000);
+            var timer = new System.Timers.Timer(30000);
             timer.AutoReset = true;
             timer.Elapsed += (_, __) => SendUserRecentScore();
             timer.Start();
@@ -85,31 +86,34 @@ namespace Misaki.Services
             File.WriteAllLines(OsuScorePath, LatestUpdate.Select(update => $"{update.Key},{update.Value}"));
         }
 
-        private async void SendUserRecentScore()
+        private void SendUserRecentScore()
         {
-            var users = LatestUpdate.Keys.ToArray();
-            foreach (string username in users)
+            new Thread(async () =>
             {
-                try
+                var users = LatestUpdate.Keys.ToArray();
+                foreach (string username in users)
                 {
-                    Score[] UserRecentScores = await OsuApi.GetUserRecent.WithUser(username).Results();
-                    foreach (var recentScore in UserRecentScores.OrderBy(score => score.Date))
+                    try
                     {
-                        if (!(IsNewScore(recentScore) && recentScore.Rank != Rank.F)) continue;
-
-                        UpdateUser(recentScore.Username, recentScore.Date);
-                        Beatmap beatmap = (await OsuApi.GetSpecificBeatmap.WithId(recentScore.BeatmapId).Results()).FirstOrDefault();
-                        User user = await OsuApi.GetUser.WithUser(username).Result();
-                        using (var temporaryStream = new MemoryStream())
+                        Score[] UserRecentScores = await OsuApi.GetUserRecent.WithUser(username).Results();
+                        foreach (var recentScore in UserRecentScores.OrderBy(score => score.Date))
                         {
-                            ScoreImage.CreateScorePanel(user, recentScore, beatmap).Save(temporaryStream, System.Drawing.Imaging.ImageFormat.Png);
-                            temporaryStream.Position = 0;
-                            await OsuChannel.SendFileAsync(temporaryStream, "osuScoreImage.png");
+                            if (!(IsNewScore(recentScore) && recentScore.Rank != Rank.F)) continue;
+
+                            UpdateUser(recentScore.Username, recentScore.Date);
+                            Beatmap beatmap = (await OsuApi.GetSpecificBeatmap.WithId(recentScore.BeatmapId).Results()).FirstOrDefault();
+                            User user = await OsuApi.GetUser.WithUser(username).Result();
+                            using (var temporaryStream = new MemoryStream())
+                            {
+                                ScoreImage.CreateScorePanel(user, recentScore, beatmap).Save(temporaryStream, System.Drawing.Imaging.ImageFormat.Png);
+                                temporaryStream.Position = 0;
+                                await OsuChannel.SendFileAsync(temporaryStream, "osuScoreImage.png");
+                            }
                         }
                     }
+                    catch { }
                 }
-                catch { }
-            }
+            }).Start();
         }
 
         private void UpdateUser(string user, DateTime time)
