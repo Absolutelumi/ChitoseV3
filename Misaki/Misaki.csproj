@@ -215,6 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Misaki.cs" />
+    <Compile Include="Modules\Admin.cs" />
     <Compile Include="Modules\Anime.cs" />
     <Compile Include="Modules\AutoManageVoiceChan.cs" />
     <Compile Include="Modules\Help.cs" />
