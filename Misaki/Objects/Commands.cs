@@ -28,6 +28,7 @@ namespace Misaki.Objects
             .AddSingleton(new VoiceManageService())
             .AddSingleton(new PubgService())
             .AddSingleton(new NSFWService())
+            .AddSingleton(new KancolleService())
             .AddSingleton<AdminService>()
             .AddSingleton<MusicService>()
             .AddSingleton<AnimeService>()
