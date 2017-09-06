@@ -4,47 +4,34 @@ using Google.Apis.Services;
 using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using Misaki.Objects;
-using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using YoutubeExtractor;
 
 namespace Misaki.Services
 {
     public class MusicService
     {
-        private ICollection<Song> Playlist { get; set; }
-
         private static readonly YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
         {
             ApiKey = Keys.GoogleApiKey
         });
 
-        public async Task AddToQueue(string song)
-        {
+        private ICollection<Song> Playlist { get; set; }
 
+        public void AddToPlaylist(string song)
+        {
         }
 
-        private async Task<SearchResult> GetBestResult(IEnumerable<string> searchTerms)
+        public async Task AddToQueue(string song)
         {
-            var searchRequest = youtubeService.Search.List("snippet");
-            searchRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
-            searchRequest.Q = string.Join("+", searchTerms);
-            searchRequest.MaxResults = 25;
-            try
-            {
-                var response = await searchRequest.ExecuteAsync();
-                return response.Items.FirstOrDefault(x => x.Id.Kind == "youtube#video"); 
-            } catch (Exception e)
-            {
-                Console.WriteLine(e.Message); 
-            }
-            return null; 
+        }
+
+        public void CreatePlalist(string playlistName)
+        {
         }
 
         public async Task SendAsync(IAudioClient client, string path)
@@ -54,7 +41,7 @@ namespace Misaki.Services
             var discord = client.CreatePCMStream(AudioApplication.Mixed);
 
             await output.CopyToAsync(discord);
-            await discord.FlushAsync(); 
+            await discord.FlushAsync();
         }
 
         private Process CreateStream(string path)
@@ -66,17 +53,25 @@ namespace Misaki.Services
                 UseShellExecute = false,
                 RedirectStandardOutput = true
             };
-            return Process.Start(ffmpeg); 
+            return Process.Start(ffmpeg);
         }
 
-        public void CreatePlalist(string playlistName)
+        private async Task<SearchResult> GetBestResult(IEnumerable<string> searchTerms)
         {
-
-        }
-
-        public void AddToPlaylist(string song)
-        {
-
+            var searchRequest = youtubeService.Search.List("snippet");
+            searchRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
+            searchRequest.Q = string.Join("+", searchTerms);
+            searchRequest.MaxResults = 25;
+            try
+            {
+                var response = await searchRequest.ExecuteAsync();
+                return response.Items.FirstOrDefault(x => x.Id.Kind == "youtube#video");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return null;
         }
 
         private void LoadPlaylist(string playlistName, IGuild guild)
@@ -88,7 +83,7 @@ namespace Misaki.Services
         private class Song
         {
             public string Title;
-            public string Url; 
+            public string Url;
         }
     }
 }

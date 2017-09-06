@@ -29,7 +29,7 @@ namespace Misaki.Services
                             synopsis = answer["synopsis"].InnerText.HtmlDecode(),
                             image = answer["image"].InnerText,
                             episodes = int.Parse(answer["episodes"].InnerText),
-                            type = answer["type"].InnerText, 
+                            type = answer["type"].InnerText,
                             status = answer["status"].InnerText,
                             startDate = answer["start_date"].InnerText,
                             endDate = answer["end_date"].InnerText,
@@ -44,8 +44,8 @@ namespace Misaki.Services
 
         public struct AnimeResult
         {
+            public int? episodes;
             public string title, synopsis, image, url, type, status, startDate, endDate;
-            public int? episodes; 
             public bool valid;
         }
     }

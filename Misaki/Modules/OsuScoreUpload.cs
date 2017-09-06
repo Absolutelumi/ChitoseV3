@@ -1,9 +1,5 @@
-﻿using Misaki.Services;
-using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Discord.Commands;
+using Misaki.Services;
 using System.Threading.Tasks;
 
 namespace Misaki.Modules
@@ -19,18 +15,11 @@ namespace Misaki.Modules
             await ReplyAsync(OsuScoreServ.Follow(user).Result);
         }
 
-        [Command("unfollow"), Summary("Opposite of above")]
-        public async Task Unfollow([Remainder, Summary("User to be unfollowed")] string user)
-        {
-            if (Context.Guild.Name != "Too Too Roo") return;
-            await ReplyAsync(OsuScoreServ.Unfollow(user).Result);
-        }
-
         [Command("followlist"), Summary("Shows list of followed")]
         public async Task GetFollowList()
         {
             if (Context.Guild.Name != "Too Too Roo") return;
-            await ReplyAsync($"Currently followed users: {string.Join(", ", OsuScoreServ.GetFollowedUsers())}"); 
+            await ReplyAsync($"Currently followed users: {string.Join(", ", OsuScoreServ.GetFollowedUsers())}");
         }
 
         [Command("latestupdate"), Summary("Gets latest update for user")]
@@ -39,8 +28,14 @@ namespace Misaki.Modules
             var pair = OsuScoreServ.GetLatestUpdate(user);
 
             if (pair == null) await ReplyAsync("User not found!");
-
             else await ReplyAsync($"{pair?.Key} was last updated on {pair?.Value}");
+        }
+
+        [Command("unfollow"), Summary("Opposite of above")]
+        public async Task Unfollow([Remainder, Summary("User to be unfollowed")] string user)
+        {
+            if (Context.Guild.Name != "Too Too Roo") return;
+            await ReplyAsync(OsuScoreServ.Unfollow(user).Result);
         }
     }
 }

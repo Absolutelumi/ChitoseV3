@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Misaki</RootNamespace>
     <AssemblyName>Misaki</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
@@ -42,207 +42,162 @@
     <ApplicationIcon>backg_copy_I6b_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Discord.Net.Commands">
-      <HintPath>packages\Discord.Net.Commands.1.0.1\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Commands, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Discord.Net.Commands.1.0.1\lib\netstandard1.1\Discord.Net.Commands.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.Core">
-      <HintPath>packages\Discord.Net.Core.1.0.1\lib\net45\Discord.Net.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Core, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Discord.Net.Core.1.0.1\lib\net45\Discord.Net.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.Rest">
-      <HintPath>packages\Discord.Net.Rest.1.0.1\lib\net45\Discord.Net.Rest.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Rest, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Discord.Net.Rest.1.0.1\lib\net45\Discord.Net.Rest.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.Rpc">
-      <HintPath>packages\Discord.Net.Rpc.1.0.1\lib\net45\Discord.Net.Rpc.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Rpc, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Discord.Net.Rpc.1.0.1\lib\net45\Discord.Net.Rpc.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.Webhook">
-      <HintPath>packages\Discord.Net.Webhook.1.0.1\lib\netstandard1.1\Discord.Net.Webhook.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.Webhook, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Discord.Net.Webhook.1.0.1\lib\netstandard1.1\Discord.Net.Webhook.dll</HintPath>
     </Reference>
-    <Reference Include="Discord.Net.WebSocket">
-      <HintPath>packages\Discord.Net.WebSocket.1.0.1\lib\net45\Discord.Net.WebSocket.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Discord.Net.WebSocket, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Discord.Net.WebSocket.1.0.1\lib\net45\Discord.Net.WebSocket.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Api.CommonProtos">
+    <Reference Include="Google.Api.CommonProtos, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
       <HintPath>packages\Google.Api.CommonProtos.1.1.0\lib\net45\Google.Api.CommonProtos.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Api.Gax">
+    <Reference Include="Google.Api.Gax, Version=2.1.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
       <HintPath>packages\Google.Api.Gax.2.1.0-beta01\lib\net45\Google.Api.Gax.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Api.Gax.Grpc">
+    <Reference Include="Google.Api.Gax.Grpc, Version=2.1.0.0, Culture=neutral, PublicKeyToken=3ec5ea7f18953e47, processorArchitecture=MSIL">
       <HintPath>packages\Google.Api.Gax.Grpc.2.1.0-beta01\lib\net45\Google.Api.Gax.Grpc.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Apis">
-      <HintPath>packages\Google.Apis.1.28.0\lib\net45\Google.Apis.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Apis, Version=1.28.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.28.0\lib\net45\Google.Apis.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth">
-      <HintPath>packages\Google.Apis.Auth.1.28.0\lib\net45\Google.Apis.Auth.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Apis.Auth, Version=1.28.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.28.0\lib\net45\Google.Apis.Auth.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Auth.PlatformServices">
-      <HintPath>packages\Google.Apis.Auth.1.28.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Apis.Auth.PlatformServices, Version=1.28.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Auth.1.28.0\lib\net45\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.Core">
-      <HintPath>packages\Google.Apis.Core.1.28.0\lib\net45\Google.Apis.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Apis.Core, Version=1.28.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.Core.1.28.0\lib\net45\Google.Apis.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.PlatformServices">
-      <HintPath>packages\Google.Apis.1.28.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Apis.PlatformServices, Version=1.28.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.1.28.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Apis.YouTube.v3">
-      <HintPath>packages\Google.Apis.YouTube.v3.1.28.0.760\lib\net45\Google.Apis.YouTube.v3.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Google.Apis.YouTube.v3, Version=1.28.0.760, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.Apis.YouTube.v3.1.28.0.760\lib\net45\Google.Apis.YouTube.v3.dll</HintPath>
     </Reference>
-    <Reference Include="Google.Cloud.Vision.V1">
+    <Reference Include="Google.Cloud.Vision.V1, Version=1.0.0.0, Culture=neutral, PublicKeyToken=185c282632e132a0, processorArchitecture=MSIL">
       <HintPath>packages\Google.Cloud.Vision.V1.1.0.0-beta04\lib\net45\Google.Cloud.Vision.V1.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Google.Protobuf">
+    <Reference Include="Google.Protobuf, Version=3.3.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>packages\Google.Protobuf.3.3.0\lib\net45\Google.Protobuf.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Grpc.Auth">
+    <Reference Include="Grpc.Auth, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
       <HintPath>packages\Grpc.Auth.1.4.1\lib\net45\Grpc.Auth.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Grpc.Core">
+    <Reference Include="Grpc.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d754f35622e28bad, processorArchitecture=MSIL">
       <HintPath>packages\Grpc.Core.1.4.1\lib\net45\Grpc.Core.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="ImageProcessor">
-      <HintPath>packages\ImageProcessor.2.5.4\lib\net45\ImageProcessor.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="HtmlAgilityPack, Version=1.5.1.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>packages\HtmlAgilityPack.1.5.1\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="ImageProcessor, Version=2.5.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ImageProcessor.2.5.4\lib\net45\ImageProcessor.dll</HintPath>
     </Reference>
     <Reference Include="Imgur.API, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Imgur.API.4.0.1\lib\net45\Imgur.API.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection">
-      <HintPath>packages\Microsoft.Extensions.DependencyInjection.2.0.0-preview2-final\lib\netstandard1.1\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Extensions.DependencyInjection, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0-preview2-final\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Extensions.DependencyInjection.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Win32.Primitives">
-      <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="NAudio">
+    <Reference Include="NAudio, Version=1.8.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\NAudio.1.8.2\lib\net35\NAudio.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.AppContext">
-      <HintPath>packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
     </Reference>
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>packages\System.Collections.Immutable.1.4.0-preview2-25405-01\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Collections.Immutable, Version=1.2.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Collections.Immutable.1.4.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Console">
-      <HintPath>packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
-    <Reference Include="System.Diagnostics.DiagnosticSource">
-      <HintPath>packages\System.Diagnostics.DiagnosticSource.4.4.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
-    <Reference Include="System.Diagnostics.Tracing">
-      <HintPath>packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Diagnostics.Tracing, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Globalization.Calendars">
-      <HintPath>packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
     </Reference>
-    <Reference Include="System.Interactive.Async">
-      <HintPath>packages\System.Interactive.Async.3.1.1\lib\net46\System.Interactive.Async.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Interactive.Async, Version=3.0.3000.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Interactive.Async.3.1.1\lib\net46\System.Interactive.Async.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO">
-      <HintPath>packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.Compression">
-      <HintPath>packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.Compression.FileSystem" />
-    <Reference Include="System.IO.Compression.ZipFile">
-      <HintPath>packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.FileSystem">
-      <HintPath>packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
     </Reference>
-    <Reference Include="System.IO.FileSystem.Primitives">
-      <HintPath>packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http">
-      <HintPath>packages\System.Net.Http.4.3.2\lib\net46\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Net.Http, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.2\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Sockets">
-      <HintPath>packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Reflection">
-      <HintPath>packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime">
-      <HintPath>packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.Extensions">
-      <HintPath>packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.InteropServices">
-      <HintPath>packages\System.Runtime.InteropServices.4.3.0\lib\net462\System.Runtime.InteropServices.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Runtime.InteropServices, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.4.3.0\lib\net462\System.Runtime.InteropServices.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
-      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Algorithms">
-      <HintPath>packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Encoding">
-      <HintPath>packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Primitives">
-      <HintPath>packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates">
-      <HintPath>packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -251,23 +206,23 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.ReaderWriter">
-      <HintPath>packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
     </Reference>
-    <Reference Include="Vse.Web.Serialization">
+    <Reference Include="Vse.Web.Serialization, Version=1.0.4.0, Culture=neutral, PublicKeyToken=fb838febb49f46b2, processorArchitecture=MSIL">
       <HintPath>packages\Vse.Web.Serialization.ControlledSerializationJsonConverter.1.0.4\lib\net45\Vse.Web.Serialization.dll</HintPath>
-      <Private>True</Private>
     </Reference>
-    <Reference Include="YoutubeExtractor">
-      <HintPath>packages\YoutubeExtractor.0.10.11\lib\net35\YoutubeExtractor.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="YoutubeExtractor, Version=0.10.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YoutubeExtractor.0.10.11\lib\net35\YoutubeExtractor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Misaki.cs" />
+    <Compile Include="Modules\Admin.cs" />
     <Compile Include="Modules\Anime.cs" />
     <Compile Include="Modules\AutoManageVoiceChan.cs" />
+    <Compile Include="Modules\Help.cs" />
+    <Compile Include="Modules\KancolleModule.cs" />
     <Compile Include="Modules\Music.cs" />
     <Compile Include="Modules\NSFW.cs" />
     <Compile Include="Modules\OsuScoreUpload.cs" />
@@ -275,18 +230,15 @@
     <Compile Include="Modules\Pubg.cs" />
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\Enums.cs" />
+    <Compile Include="Objects\HelpMenu.cs" />
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\NsfwManager.cs" />
     <Compile Include="Objects\Poll.cs" />
     <Compile Include="Objects\ScoreImage.cs" />
     <Compile Include="Objects\TypeReaders.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AnimeService.cs" />
+    <Compile Include="Services\KancolleService.cs" />
     <Compile Include="Services\PubgService.cs" />
     <Compile Include="Services\RoleManageService.cs" />
     <Compile Include="Services\AnnounceService.cs" />
@@ -299,12 +251,16 @@
     <Compile Include="Modules\Osu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Services\OsuService.cs" />
     <Compile Include="Services\VoiceManageService.cs" />
-    <Compile Include="Timer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -333,12 +289,10 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets'))" />
     <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets'))" />
-    <Error Condition="!Exists('packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets'))" />
-    <Error Condition="!Exists('packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets'))" />
     <Error Condition="!Exists('packages\Grpc.Core.1.4.1\build\net45\Grpc.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Grpc.Core.1.4.1\build\net45\Grpc.Core.targets'))" />
+    <Error Condition="!Exists('packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets')" />
-  <Import Project="packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets" Condition="Exists('packages\Microsoft.Packaging.Tools.1.0.0-preview2-25401-01\build\Microsoft.Packaging.Tools.targets')" />
-  <Import Project="packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets" Condition="Exists('packages\NETStandard.Library.2.0.0-preview2-25401-01\build\NETStandard.Library.targets')" />
   <Import Project="packages\Grpc.Core.1.4.1\build\net45\Grpc.Core.targets" Condition="Exists('packages\Grpc.Core.1.4.1\build\net45\Grpc.Core.targets')" />
+  <Import Project="packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('packages\NETStandard.Library.2.0.0\build\netstandard2.0\NETStandard.Library.targets')" />
 </Project>

@@ -1,21 +1,19 @@
-﻿using Misaki.Services;
-using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Misaki.Services;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace Misaki.Objects
 {
-    public class Commands 
+    public class Commands
     {
-        private DiscordSocketClient Client = Misaki.Client; 
+        private DiscordSocketClient Client = Misaki.Client;
 
-        private CommandService commands;
-        private IServiceProvider services;
+        private CommandService commands { get; set; }
+        private IServiceProvider services { get; set; }
 
         public Commands()
         {
@@ -30,6 +28,7 @@ namespace Misaki.Objects
             .AddSingleton(new VoiceManageService())
             .AddSingleton(new PubgService())
             .AddSingleton(new NSFWService())
+            .AddSingleton(new KancolleService())
             .AddSingleton<AdminService>()
             .AddSingleton<MusicService>()
             .AddSingleton<AnimeService>()
@@ -59,7 +58,7 @@ namespace Misaki.Objects
 
         public async Task Install()
         {
-            Client.MessageReceived += async (SocketMessage msg) => await Handle(msg); 
+            Client.MessageReceived += async (SocketMessage msg) => await Handle(msg);
 
             await commands.AddModulesAsync(Assembly.GetEntryAssembly());
         }

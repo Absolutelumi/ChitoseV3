@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 using Misaki.Services;
-using OsuApi;
 using System.Threading.Tasks;
 
 namespace Misaki.Modules

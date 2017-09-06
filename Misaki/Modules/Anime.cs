@@ -1,7 +1,5 @@
-﻿using Misaki.Objects;
+﻿using Discord.Commands;
 using Misaki.Services;
-using Discord;
-using Discord.Commands;
 using System.Threading.Tasks;
 
 namespace Misaki.Modules
