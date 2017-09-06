@@ -231,6 +231,7 @@
     <Compile Include="Objects\Commands.cs" />
     <Compile Include="Objects\Enums.cs" />
     <Compile Include="Objects\HelpMenu.cs" />
+    <Compile Include="Objects\KancolleShipGirlMessage.cs" />
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\NsfwManager.cs" />
     <Compile Include="Objects\Poll.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AnimeService.cs" />
     <Compile Include="Services\KancolleService.cs" />
+    <Compile Include="Services\KancolleShipGirlHelper.cs" />
     <Compile Include="Services\PubgService.cs" />
     <Compile Include="Services\RoleManageService.cs" />
     <Compile Include="Services\AnnounceService.cs" />

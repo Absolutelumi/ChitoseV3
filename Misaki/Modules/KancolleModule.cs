@@ -1,4 +1,5 @@
 ﻿using Discord.Commands;
+using Misaki.Objects;
 using Misaki.Services;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,10 @@ namespace Misaki.Modules
         [Command("shipgirl"), Summary("Gets and returns shipgirl information")]
         public async Task GetShipGirl([Remainder] string name)
         {
-            var msg = await ReplyAsync(string.Empty, embed: KancolleService.GetShipVersion(name).ToEmbed());
+            var ship = KancolleService.GetShipInfo(name); 
+            var msg = await ReplyAsync(string.Empty, embed: ship.ToEmbed());
+
+            await new KancolleShipGirlMessage(msg, ship).Manage();
         }
     }
 }
