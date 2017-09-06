@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Web;
+using static Misaki.Services.KancolleShipGirlHelper;
 
 namespace Misaki
 {
@@ -135,6 +136,30 @@ namespace Misaki
             int bestGreen = bestColor[1] * range + range / 2;
             int bestBlue = bestColor[2] * range + range / 2;
             return System.Drawing.Color.FromArgb(bestRed, bestGreen, bestBlue);
+        }
+
+        public static Discord.Color GetRarityColor(Rarity rarity)
+        {
+            switch (rarity)
+            {
+                case (Rarity.VeryCommon):
+                    return new Discord.Color(142, 176, 237);
+                case (Rarity.Common):
+                    return new Discord.Color(175, 221, 250);
+                case (Rarity.Uncommon):
+                    return new Discord.Color(146, 209, 207);
+                case (Rarity.Rare):
+                    return new Discord.Color(192, 192, 192);
+                case (Rarity.VeryRare):
+                    return new Discord.Color(255, 225, 64);
+                case (Rarity.Holo):
+                    return new Discord.Color(238, 187, 238);
+                case (Rarity.SHolo):
+                    return new Discord.Color(242, 139, 177);
+                case (Rarity.SSHolo):
+                    return new Discord.Color(245, 90, 115);
+            }
+            return Discord.Color.Default;
         }
 
         public static string GetDescription<T>(this T enumerationValue)

@@ -17,6 +17,8 @@ namespace Misaki
 
         public static Collection<IMessage> Messages = new Collection<IMessage>();
 
+        public bool IsDisposed = false;
+
         public Commands Commands;
         private DiscordSocketConfig clientConfig;
 
@@ -95,6 +97,13 @@ namespace Misaki
             Client.MessageReceived += (msg) =>
             {
                 Messages.Add(msg);
+                return Task.CompletedTask;
+            };
+
+            Client.Disconnected += (_) =>
+            {
+                this.Dispose();
+                IsDisposed = true;
                 return Task.CompletedTask;
             };
 
