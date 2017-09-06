@@ -12,7 +12,7 @@ namespace Misaki.Services
         public Embed FindAndFormatAnimeResult(string animeTitle)
         {
             var animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Keys.MalPassword);
-            if (animeResult.title == null) return new EmbedBuilder().WithTitle("Anime not found!").Build(); 
+            if (animeResult.title == null) return new EmbedBuilder().WithTitle("Anime not found!").Build();
             string description = TagMatcher.Replace(animeResult.synopsis, string.Empty);
             System.Drawing.Color bestColor = Extensions.GetBestColor(animeResult.image);
             Discord.Color bestDiscordColor = new Discord.Color(bestColor.R, bestColor.G, bestColor.B);

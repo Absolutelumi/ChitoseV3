@@ -1,12 +1,11 @@
-﻿using OsuApi.Model;
+﻿using ImageProcessor;
+using OsuApi.Model;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using ImageProcessor;
 
-namespace Misaki.Objects
+namespace Score_Image
 {
     public class ScoreImage
     {
@@ -18,16 +17,19 @@ namespace Misaki.Objects
 
         private const int StrokeWidth = 5;
 
+        private const int MinimumDifficultyWidth = 150;
+
         private static Brush BlueBrush = new SolidBrush(Color.FromArgb(255, 34, 187, 221));
 
         private static Brush PinkBrush = new SolidBrush(Color.FromArgb(255, 238, 34, 153));
 
-        private static Pen PinkPen = new Pen(Color.FromArgb(255, 238, 34, 153), StrokeWidth * 2);
-        private static Font rankFont = new Font("Calibri", 128, GraphicsUnit.Point);
-        private static Brush SilverBrush = new SolidBrush(Color.Silver);
+        private static readonly Pen PinkPen = new Pen(Color.FromArgb(255, 238, 34, 153), StrokeWidth * 2);
+        private static readonly Font RankFont = new Font("Calibri", 128, GraphicsUnit.Point);
+        private static readonly Font TitleFont = new Font("Calibri", 24, GraphicsUnit.Point);
+        private static readonly Brush SilverBrush = new SolidBrush(Color.Silver);
 
-        private static Pen SilverPen = new Pen(Color.Silver, StrokeWidth * 2);
-        private static Pen WhitePen = new Pen(Color.White, StrokeWidth * 2);
+        private static readonly Pen SilverPen = new Pen(Color.Silver, StrokeWidth * 2);
+        private static readonly Pen WhitePen = new Pen(Color.White, StrokeWidth * 2);
 
         static ScoreImage()
         {
@@ -62,9 +64,9 @@ namespace Misaki.Objects
             return background;
         }
 
-        private static Bitmap AcquireAvatar(string userId) => new Bitmap(Extensions.GetHttpStream(new Uri($"https://a.ppy.sh/{userId}")));
+        private static Bitmap AcquireAvatar(string userId) => new Bitmap(Misaki.Extensions.GetHttpStream(new Uri($"https://a.ppy.sh/{userId}")));
 
-        private static Bitmap AcquireBackground(string beatmapId) => new Bitmap(Extensions.GetHttpStream(new Uri($"https://assets.ppy.sh/beatmaps/{beatmapId}/covers/cover.jpg")));
+        private static Bitmap AcquireBackground(string beatmapId) => new Bitmap(Misaki.Extensions.GetHttpStream(new Uri($"https://assets.ppy.sh/beatmaps/{beatmapId}/covers/cover.jpg")));
 
         private static void DrawAcc(Score score, Graphics graphics)
         {
@@ -140,37 +142,29 @@ namespace Misaki.Objects
             GraphicsPath rankPath = new GraphicsPath();
             StringFormat rankFormat = new StringFormat();
             rankFormat.Alignment = StringAlignment.Far;
-            rankPath.AddString(rank, rankFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 128 / 72, new Point(900, 60), rankFormat);
+            rankPath.AddString(rank, RankFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 128 / 72, new Point(900, 60), rankFormat);
             if (score.Rank == Rank.SH || score.Rank == Rank.SX || score.Rank == Rank.XH)
             {
-                graphics.DrawPath(PinkPen, rankPath);
-                graphics.FillPath(SilverBrush, rankPath);
+                var innerPinkPen = new Pen(Color.FromArgb(255, 238, 34, 153), StrokeWidth * 0.75f);
+                var outerWhitePen = new Pen(Color.White, StrokeWidth * 2);
+                graphics.DrawPath(outerWhitePen, rankPath);
+                graphics.DrawPath(innerPinkPen, rankPath);
             }
             else
             {
                 graphics.DrawPath(WhitePen, rankPath);
                 graphics.FillPath(PinkBrush, rankPath);
             }
-        }
-
-        private static void DrawTitle(Graphics graphics, string title, string difficulty, string stars, string beatmapper)
-        {
-            Font titleFont = new Font("Calibri", 36, GraphicsUnit.Point);
-            StringFormat titleFormat = new StringFormat();
-            GraphicsPath titlePath = new GraphicsPath();
-            titleFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces | StringFormatFlags.NoClip;
-            titleFormat.Trimming = StringTrimming.EllipsisCharacter;
-            string difficultyString = $"[{difficulty}]";
-            int maxWidth = BackgroundWidth - 40 - StrokeWidth * 2;
-            SizeF difficultySize = graphics.MeasureString(difficultyString, titleFont);
-            SizeF titleSize = graphics.MeasureString(title, titleFont);
-            SizeF starSize = graphics.MeasureString($" {stars}★", titleFont);
-            float usedWidth = difficultySize.Width + titleSize.Width + starSize.Width; 
-            if (usedWidth > maxWidth && difficultySize.Width > titleSize.Width) difficultyString = $"[{Trim(difficultyString, usedWidth, graphics, titleFont)}]";
-            if (usedWidth > maxWidth && difficultySize.Width < titleSize.Width) title = Trim(title, usedWidth, graphics, titleFont); 
-            titlePath.AddString(title + " " + difficultyString + $" {stars}★", titleFont.FontFamily, (int)FontStyle.Regular, graphics.DpiY * 60 / 150, new Point(15, 10), titleFormat);
-            graphics.DrawPath(WhitePen, titlePath);
-            graphics.FillPath(BlueBrush, titlePath);
+            //if (score.Rank == Rank.SH || score.Rank == Rank.SX || score.Rank == Rank.XH)
+            //{
+            //    graphics.DrawPath(PinkPen, rankPath);
+            //    graphics.FillPath(SilverBrush, rankPath);
+            //}
+            //else
+            //{
+            //    graphics.DrawPath(WhitePen, rankPath);
+            //    graphics.FillPath(PinkBrush, rankPath);
+            //}
         }
 
         private static void DrawUsername(User user, Graphics graphics)
@@ -200,7 +194,7 @@ namespace Misaki.Objects
         private static int GetByRank(Score score, Graphics graphics)
         {
             string rank = score.Rank.ToString().Contains("H") ? score.Rank.ToString().Replace("H", string.Empty) : score.Rank.ToString();
-            int rankSize = (int)graphics.MeasureString(rank, rankFont).Width;
+            int rankSize = (int)graphics.MeasureString(rank, RankFont).Width;
 
             return 900 - rankSize + 20;
         }
@@ -231,18 +225,76 @@ namespace Misaki.Objects
             return graphicsPath;
         }
 
-        private static string Trim(string text, float usedWidth, Graphics graphics, Font font)
+        private static void CalculateWidths(int width, ref int titleWidth, ref int difficultyWidth)
         {
-            float maxWidth = BackgroundWidth - 40 - StrokeWidth * 2;
-            float widthWithoutText = usedWidth - graphics.MeasureString(text, font).Width; 
-
-            while (graphics.MeasureString(text, font).Width + widthWithoutText > maxWidth)
+            int removalRequired = titleWidth + difficultyWidth - width;
+            if (removalRequired > 0)
             {
-                text = text.Remove(text.Length - 1);
+                if (difficultyWidth - removalRequired < MinimumDifficultyWidth)
+                {
+                    if (difficultyWidth < MinimumDifficultyWidth)
+                    {
+                        titleWidth -= removalRequired;
+                    }
+                    else
+                    {
+                        titleWidth -= removalRequired - (difficultyWidth - MinimumDifficultyWidth);
+                        difficultyWidth = MinimumDifficultyWidth;
+                    }
+                }
+                else
+                {
+                    difficultyWidth -= removalRequired;
+                }
             }
+        }
 
-            return text.Remove(text.Length - 4) + "...";
+        private static RectangleF GetStringBounds(Graphics graphics, string text, Font font, StringFormat format)
+        {
+            using (var path = new GraphicsPath())
+            {
+                path.AddString(text, font.FontFamily, (int)font.Style, graphics.DpiY * font.Size / 72, new PointF(0.0f, 0.0f), format);
+                var bounds = path.GetBounds();
+                bounds.Width += 25;
+                return bounds;
+            }
+        }
+
+        private static void DrawTitle(Graphics graphics, string title, string difficulty, string stars, string beatmapper)
+        {
+            using (var titlePath = new GraphicsPath())
+            using (var titleFormat = new StringFormat())
+            {
+                titleFormat.FormatFlags |= StringFormatFlags.MeasureTrailingSpaces | StringFormatFlags.NoClip | StringFormatFlags.NoWrap;
+                titleFormat.Trimming = StringTrimming.EllipsisCharacter;
+                titleFormat.LineAlignment = StringAlignment.Center;
+                int xLocation = 15;
+                const int yLocation = 20;
+                const int style = (int)FontStyle.Regular;
+                const int shift = -10;
+                const int maxWidth = BackgroundWidth - StrokeWidth * 4 - 5 * shift;
+                float emSize = graphics.DpiY * TitleFont.Size / 72;
+
+                var ending = $"] {stars}★";
+                var middle = " [";
+                var endingSize = GetStringBounds(graphics, ending, TitleFont, titleFormat);
+                int height = (int)endingSize.Height;
+
+                int endingWidth = (int)endingSize.Width;
+                int middleWidth = (int)GetStringBounds(graphics, middle, TitleFont, titleFormat).Width;
+
+                int remainingWidth = maxWidth - endingWidth - middleWidth;
+                int titleWidth = (int)GetStringBounds(graphics, title, TitleFont, titleFormat).Width;
+                int difficultyWidth = (int)GetStringBounds(graphics, difficulty, TitleFont, titleFormat).Width;
+                CalculateWidths(remainingWidth, ref titleWidth, ref difficultyWidth);
+
+                titlePath.AddString(title, TitleFont.FontFamily, style, emSize, new Rectangle(xLocation, yLocation, titleWidth, height), titleFormat);
+                titlePath.AddString(middle, TitleFont.FontFamily, style, emSize, new Rectangle(xLocation += titleWidth + 2 * shift, yLocation, middleWidth, height), titleFormat);
+                titlePath.AddString(difficulty, TitleFont.FontFamily, style, emSize, new Rectangle(xLocation += middleWidth + shift, yLocation, difficultyWidth, height), titleFormat);
+                titlePath.AddString(ending, TitleFont.FontFamily, style, emSize, new Rectangle(xLocation += difficultyWidth + 2 * shift, yLocation, endingWidth, height), titleFormat);
+                graphics.DrawPath(WhitePen, titlePath);
+                graphics.FillPath(BlueBrush, titlePath);
+            }
         }
     }
 }
-

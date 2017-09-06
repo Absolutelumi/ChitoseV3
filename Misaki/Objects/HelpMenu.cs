@@ -1,8 +1,8 @@
 ﻿namespace Misaki.Objects
 {
-    public class TypeReaders
+    public class HelpMenu
     {
-        public TypeReaders()
+        public HelpMenu()
         {
         }
     }
