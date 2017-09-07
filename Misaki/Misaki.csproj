@@ -243,6 +243,7 @@
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\NsfwManager.cs" />
     <Compile Include="Objects\Poll.cs" />
+    <Compile Include="Objects\ReactionListener.cs" />
     <Compile Include="Objects\ScoreImage.cs" />
     <Compile Include="Objects\TypeReaders.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -252,6 +253,7 @@
     </Compile>
     <Compile Include="Services\AdminService.cs" />
     <Compile Include="Services\AnimeService.cs" />
+    <Compile Include="Services\KancolleSeasonalMap.cs" />
     <Compile Include="Services\KancolleService.cs" />
     <Compile Include="Services\KancolleShipGirlHelper.cs" />
     <Compile Include="Services\PubgService.cs" />

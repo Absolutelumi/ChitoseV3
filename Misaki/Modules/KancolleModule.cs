@@ -15,9 +15,8 @@ namespace Misaki.Modules
         public async Task GetShipGirl([Remainder] string name)
         {
             var ship = KancolleService.GetShipInfo(name); 
-            var msg = await ReplyAsync(string.Empty, embed: ship.ToEmbed());
-
-            await new KancolleShipGirlMessage(msg, ship).Manage();
+            var msg = await ReplyAsync(string.Empty, embed: ship.ToEmbed(ship.CardUrl));
+            new KancolleShipGirlMessage(msg, ship);
         }
     }
 }

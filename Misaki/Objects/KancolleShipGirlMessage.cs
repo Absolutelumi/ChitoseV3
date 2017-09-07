@@ -5,119 +5,103 @@ using Misaki.Services;
 using System.Linq;
 using System.Timers;
 using System;
+using System.Collections.Generic;
 
 namespace Misaki.Objects
 {
     public class KancolleShipGirlMessage
     {
-        private IUserMessage KancolleMessage { get; set; }
+        private static readonly IEmote Card = new Emoji("🎴");
+        private static readonly IEmote Ship = new Emoji("🚢");
+        private static readonly IEmote Damage = new Emoji("⭕");
 
-        private KancolleShipGirlHelper.Ship ShipGirl { get; set; }
+        private IUserMessage KancolleMessage;
+        private KancolleShipGirlHelper.Ship ShipGirl;
+        private ReactionListener Listener;
+        private IDictionary<string, IList<string>> NormalCGs;
+        private IDictionary<string, IList<string>> DamagedCGs;
+        private string CurrentUrl;
+        private string CurrentTab;
+        private int CurrentIndex;
+        private bool Damaged;
 
-        private static readonly IEmote VariantEmote = new Emoji("\u2705");
-        private static readonly IEmote DamagedCG = new Emoji("\u274E");
-        private static readonly IEmote Card = new Emoji("\u274C");
-
-        private Timer KancolleTimer { get; set; }
-
-        private KancolleShipGirlHelper.Ship.CGSet CurrentVariant { get; set; }
-
-        private bool IsDamaged = false;
-
-        public KancolleShipGirlMessage(IUserMessage msg, KancolleShipGirlHelper.Ship ship)
+        public KancolleShipGirlMessage(IUserMessage message, KancolleShipGirlHelper.Ship ship)
         {
-            KancolleMessage = msg;
+            KancolleMessage = message;
             ShipGirl = ship;
-            CurrentVariant = ShipGirl.BaseCG;
-            KancolleTimer = new Timer(30000);
-            KancolleTimer.Elapsed += (_, __) => DeletePoll();
-            KancolleTimer.Start();
-        }
-
-        private void DeletePoll()
-        {
-            GC.SuppressFinalize(this);
-        }
-
-        public async Task Manage()
-        {
-            if (KancolleMessage.Embeds == null) return;
-
-            await KancolleMessage.AddReactionAsync(Card);
-            await KancolleMessage.AddReactionAsync(DamagedCG);
-            await KancolleMessage.AddReactionAsync(VariantEmote);
-
-            Misaki.Client.ReactionAdded += async (_, __, reaction) =>
+            CurrentUrl = ShipGirl.CardUrl;
+            CurrentTab = Card.Name;
+            CurrentIndex = 0;
+            Damaged = false;
+            NormalCGs = new Dictionary<string, IList<string>>();
+            DamagedCGs = new Dictionary<string, IList<string>>();
+            var timer = new Timer(1000 * 60 * 10);
+            timer.Elapsed += (_, __) =>
             {
-                if (reaction.MessageId != KancolleMessage.Id || reaction.User.Value.IsBot) return;
-                if (reaction.Emote.Name == Card.Name) await CardCGSwitch();
-                if (reaction.Emote.Name == DamagedCG.Name) await RegularDamagedSwitch();
-                if (reaction.Emote.Name == VariantEmote.Name) await VariantSwitch();
+                Listener?.Dispose();
+                timer.Dispose();
             };
-
-            Misaki.Client.ReactionRemoved += async (_, __, reaction) =>
-            {
-                if (reaction.MessageId != KancolleMessage.Id || reaction.User.Value.IsBot) return;
-                if (reaction.Emote.Name == Card.Name) await CardCGSwitch();
-                if (reaction.Emote.Name == DamagedCG.Name) await RegularDamagedSwitch();
-                if (reaction.Emote.Name == VariantEmote.Name) await VariantSwitch();
-            };
+            SetupListener();
         }
 
-        private async Task CardCGSwitch()
+        private void SetupListener()
         {
-            IsDamaged = false;
-            await KancolleMessage.ModifyAsync(message =>
+            var emotes = new List<IEmote>() { Damage, Card, Ship };
+            NormalCGs[Card.Name] = new List<string>() { ShipGirl.CardUrl };
+            DamagedCGs[Card.Name] = new List<string>() { ShipGirl.CardUrl };
+            NormalCGs[Ship.Name] = new List<string>() { ShipGirl.BaseCG.NormalUrl };
+            DamagedCGs[Ship.Name] = new List<string>() { ShipGirl.BaseCG.DamagedUrl };
+            var shipEmotes = new HashSet<IEmote>();
+            foreach (var variant in ShipGirl.CGVariant.Keys)
             {
-                message.Embed = new EmbedBuilder()
-                .WithTitle($"{ShipGirl.KanjiName} - {ShipGirl.EnglishName}")
-                .WithAuthor(ShipGirl.Class)
-                .WithImageUrl(KancolleMessage.Embeds.First().Image?.Url == CurrentVariant.NormalUrl || KancolleMessage.Embeds.First().Image?.Url == CurrentVariant.DamagedUrl ? ShipGirl.ImageUrl : ShipGirl.BaseCG.NormalUrl)
-                .WithColor(Extensions.GetRarityColor(ShipGirl.Rarity))
-                .Build();
-            });
-        }
-
-        private async Task RegularDamagedSwitch()
-        {
-            IsDamaged = IsDamaged == true ? false : true;
-            await KancolleMessage.ModifyAsync(message =>
-            {
-                message.Embed = new EmbedBuilder()
-                .WithTitle(ShipGirl.KanjiName == ShipGirl.EnglishName ? ShipGirl.KanjiName : $"{ShipGirl.KanjiName} - {ShipGirl.EnglishName}")
-                .WithAuthor(ShipGirl.Class)
-                .WithImageUrl(IsDamaged ? CurrentVariant.DamagedUrl : CurrentVariant.NormalUrl)
-                .WithColor(Extensions.GetRarityColor(ShipGirl.Rarity))
-                .Build();
-            });
-        }
-
-        private async Task VariantSwitch()
-        {
-            var variantArray = ShipGirl.CGVariant.ToArray();
-            for (int i = 0; i < variantArray.Length; i++)
-            {
-                if (CurrentVariant.NormalUrl == ShipGirl.BaseCG.NormalUrl)
+                var emote = KancolleSeasonalMap.GetEmoji(variant);
+                shipEmotes.Add(emote);
+                if (!NormalCGs.ContainsKey(emote.Name))
                 {
-                    CurrentVariant = variantArray[0].Value;
-                    break;
+                    NormalCGs[emote.Name] = new List<string>();
                 }
-                if (variantArray[i].Value.NormalUrl == CurrentVariant.NormalUrl)
+                if (!DamagedCGs.ContainsKey(emote.Name))
                 {
-                    CurrentVariant = i == variantArray.Length - 1 ? ShipGirl.BaseCG : variantArray[i + 1].Value;
-                    break;
+                    DamagedCGs[emote.Name] = new List<string>();
+                }
+                NormalCGs[emote.Name].Add(ShipGirl.CGVariant[variant].NormalUrl);
+                DamagedCGs[emote.Name].Add(ShipGirl.CGVariant[variant].DamagedUrl);
+            }
+            emotes.AddRange(shipEmotes);
+            Listener = new ReactionListener(KancolleMessage, emotes);
+            Listener.Initialize();
+            Listener.OnReactionChanged += OnReactionChanged;
+        }
+
+        private async Task OnReactionChanged(IEmote emote, ReactionListener.Action action)
+        {
+            if (emote.Name == Damage.Name)
+            {
+                Damaged = !Damaged;
+            }
+            else
+            {
+                if (emote.Name != CurrentTab)
+                {
+                    CurrentIndex = 0;
+                    CurrentTab = emote.Name;
+                }
+                else
+                {
+                    CurrentIndex = (CurrentIndex + 1) % NormalCGs[CurrentTab].Count;
                 }
             }
-
-            await KancolleMessage.ModifyAsync(message =>
+            var newUrl = Damaged ? DamagedCGs[CurrentTab][CurrentIndex] : NormalCGs[CurrentTab][CurrentIndex];
+            if (newUrl != CurrentUrl)
             {
-                message.Embed = new EmbedBuilder()
-                .WithTitle(ShipGirl.KanjiName == ShipGirl.EnglishName ? ShipGirl.KanjiName : $"{ShipGirl.KanjiName} - {ShipGirl.EnglishName}")
-                .WithAuthor(ShipGirl.Class)
-                .WithImageUrl(IsDamaged ? CurrentVariant.DamagedUrl : CurrentVariant.NormalUrl)
-                .WithColor(Extensions.GetRarityColor(ShipGirl.Rarity))
-                .Build();
-            });
+                CurrentUrl = newUrl;
+                await UpdateMessage();
+            }
+        }
+
+        private async Task UpdateMessage()
+        {
+            await KancolleMessage.ModifyAsync(properties => properties.Embed = ShipGirl.ToEmbed(CurrentUrl));
         }
     }
 }
