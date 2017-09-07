@@ -10,8 +10,6 @@ namespace Misaki
             Console.ForegroundColor = ConsoleColor.White;
 
             var bot = new Misaki();
-            while (bot.IsDisposed == false) { }
-            new Program();
         }
     }
 }
