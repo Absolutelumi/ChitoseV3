@@ -2,6 +2,7 @@
 using Discord.Commands;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Misaki.Modules
@@ -36,12 +37,16 @@ namespace Misaki.Modules
         [Command("roll"), Summary("Rolls an x sided die y times")]
         public async Task Roll([Summary("Ammount of sides on die")] int sides = 6, [Summary("The ammount of rolls")] int rollCount = 1)
         {
+            /*
             Random random = Extensions.rng;
 
             int[] roles = new int[rollCount];
             for (int i = 0; i < roles.Length; i++) roles[i] = random.Next(1, sides + 1);
 
             await ReplyAsync(":game_die: " + string.Join(" , ", roles));
+            */
+            var rolls = Enumerable.Range(0, rollCount).Select(_ => Extensions.rng.Next(1, sides + 1));
+            await ReplyAsync(":game_die: " + string.Join(" , ", rolls));
         }
     }
 }

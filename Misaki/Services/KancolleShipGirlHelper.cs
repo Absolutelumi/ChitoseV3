@@ -11,7 +11,7 @@ namespace Misaki.Services
     {
         private static readonly Regex ShipInformationExtractor = new Regex(@"class=""infobox-kai-header-major""[^>]*title=""(?<rarity>[^""]*).*\n.*<strong class=""selflink"">(?<english_name>[^<]*).*\n.*No\.(<[^>]*>)?(?<number>\d*).*title=""(?<kana_name>[^""]*).*"">(?<kanji_name>[^<]*).*\n.*>(?<class>[^<]*)</b>.*\n.*\n.*\n.*src=""(?<image>[^""]*)");
         private static readonly Regex ShipListExtractor = new Regex(@"(\n|(<p>))<a href=""/wiki/(?<page_name>[^""]*)"" title=""[^""]*"">(?<ship_name>[^<]*)</a>[^<]*((<span[^>]*>[^<]*</span>&#32;)|(\n</p>))");
-        private static readonly Regex ShipCGExtractor = new Regex(@"<img src=""(?<url>https://[^""]*)"".*data-image-name=""((?<type>[A-Z]*) )?(?<name>([a-zA-Z']+( ([a-zA-Z']+)|2)*)|(I-\d+( ([a-zA-Z']+)|2)*)) ((?<number>[\d]*) )?Full(?<damaged> Damaged)?\.png""");
+        private static readonly Regex ShipCGExtractor = new Regex(@"<img src=""(?<url>https://[^""]*)"".*data-image-name=""((?<type>[A-Z]*) )?(?<name>([a-zA-Z']+( ([a-zA-Z']+)|2)*( 20\d\d)?)|(I-\d+( ([a-zA-Z']+)|2)*( 20\d\d)?)) ((?<number>[\d]*) )?Full(?<damaged> Damaged)?\.png""");
         private readonly IDictionary<string, string> ShipMap;
 
         public KancolleShipGirlHelper()

@@ -30,7 +30,7 @@ namespace Misaki.Objects
 
         private async Task OnReactionRemoved(Cacheable<IUserMessage, ulong> arg1, Discord.WebSocket.ISocketMessageChannel arg2, Discord.WebSocket.SocketReaction arg3)
         {
-            if (arg1.Id == Message.Id)
+            if (arg1.Id == Message.Id && arg3.UserId != Misaki.Client.CurrentUser.Id && Emotes.Contains(arg3.Emote))
             {
                 await OnReactionChanged(arg3.Emote, Action.Removed);
             }
@@ -38,7 +38,7 @@ namespace Misaki.Objects
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> arg1, Discord.WebSocket.ISocketMessageChannel arg2, Discord.WebSocket.SocketReaction arg3)
         {
-            if (arg1.Id == Message.Id)
+            if (arg1.Id == Message.Id && arg3.UserId != Misaki.Client.CurrentUser.Id && Emotes.Contains(arg3.Emote))
             {
                 await OnReactionChanged(arg3.Emote, Action.Added);
             }

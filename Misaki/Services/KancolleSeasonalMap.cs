@@ -1,20 +1,21 @@
 ﻿using Discord;
+using System.Text.RegularExpressions;
 
 namespace Misaki.Services
 {
     static class KancolleSeasonalMap
     {
+        private static readonly Regex YearRemover = new Regex(@"(?<base_name>[^\d^ ]+( [^\d^ ]+)*)( 20\d\d)?");
+
         public static IEmote GetEmoji(string variant)
         {
+            variant = YearRemover.Match(variant).Groups["base_name"].Value;
             switch (variant)
             {
                 case "Xmas":
-                case "Xmas 2014":
-                case "Xmas 2015":
                 case "Christmas":
                     return new Emoji("🎁");
                 case "Year End":
-                case "Year End 2014":
                 case "New Year":
                 case "New Year's":
                     return new Emoji("🎊");
@@ -24,7 +25,6 @@ namespace Misaki.Services
                 case "Rainy":
                     return new Emoji("☂");
                 case "Summer":
-                case "Summer 2016":
                     return new Emoji("🏖");
                 case "Oktoberfest":
                     return new Emoji("🍺");
