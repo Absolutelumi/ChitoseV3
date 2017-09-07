@@ -1,14 +1,16 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32.SafeHandles;
 using Misaki.Services;
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Misaki.Objects
 {
-    public class Commands
+    public class Commands 
     {
         private DiscordSocketClient Client = Misaki.Client;
 

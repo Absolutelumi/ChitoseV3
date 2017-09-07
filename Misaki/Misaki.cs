@@ -5,6 +5,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Microsoft.Win32.SafeHandles;
 
 namespace Misaki
 {
@@ -13,18 +15,33 @@ namespace Misaki
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
         public static readonly string FfmpegPath = Properties.Settings.Default.TempDirectory;
         public static readonly string TempPath = Properties.Settings.Default.TempDirectory;
-        public static DiscordSocketClient Client;
 
-        public static Collection<IMessage> Messages = new Collection<IMessage>();
+        public static DiscordSocketClient Client { get; set; }
 
-        public bool IsDisposed = false;
+        private bool Disposed = false;
 
         public Commands Commands;
         private DiscordSocketConfig clientConfig;
 
         public Misaki() => StartAsync().GetAwaiter().GetResult();
 
-        public void Dispose() => GC.SuppressFinalize(this);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (Disposed) return;
+
+            if (disposing)
+            {
+                Client.Dispose();
+            }
+
+            Disposed = true;
+        }
 
         private int GetUserCount(DiscordSocketClient client)
         {
@@ -94,16 +111,10 @@ namespace Misaki
 
             Client.JoinedGuild += HandleBotJoinedGuild;
 
-            Client.MessageReceived += (msg) =>
-            {
-                Messages.Add(msg);
-                return Task.CompletedTask;
-            };
-
             Client.Disconnected += (_) =>
             {
                 this.Dispose();
-                IsDisposed = true;
+                new Misaki();
                 return Task.CompletedTask;
             };
 

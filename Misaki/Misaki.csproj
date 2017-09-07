@@ -323,7 +323,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\OsuService.cs" />
     <Compile Include="Services\VoiceManageService.cs" />
-    <Compile Include="Timer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
