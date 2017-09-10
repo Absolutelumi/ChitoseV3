@@ -182,7 +182,7 @@ namespace Misaki.Services
             for (int i = ships.Count - 1; i >= 0; i--)
             {
                 var shipName = ships[i].EnglishName;
-                cgsByName[shipName] = cgs.Where(cg => cg.Ship.StartsWith(shipName)).ToList();
+                cgsByName[shipName] = cgs.Where(cg => cg.Ship.StartsWith(shipName)).Distinct().ToList();
                 cgs = cgs.Where(cg => !cg.Ship.StartsWith(shipName)).ToList();
             }
             return cgsByName;
