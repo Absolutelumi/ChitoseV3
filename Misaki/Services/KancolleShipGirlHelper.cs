@@ -87,14 +87,13 @@ namespace Misaki.Services
                     CardUrl = match.Groups["image"].Value,
                     BaseCG = new Ship.CGSet(),
                     CGVariant = new Dictionary<string, Ship.CGSet>(),
-                    Stats = new List<Ship.Stat>()
+                    Stats = new Dictionary<string, Ship.Stat>()
                 });
                 while (statMatch.Success)
                 {
-                    if (ship.Stats.Any(stat => stat.Name == statMatch.Groups["stat_name"].Value)) break;
-                    ship.Stats.Add(new Ship.Stat()
+                    if (ship.Stats.Any(stat => stat.Key == statMatch.Groups["stat_name"].Value)) break;
+                    ship.Stats.Add(statMatch.Groups["stat_name"].Value, new Ship.Stat()
                     {
-                        Name = statMatch.Groups["stat_name"].Value,
                         Base = int.Parse(statMatch.Groups["value"].Value),
                         Max = statMatch.Groups["max_value"].Success ? int.Parse(statMatch.Groups["max_value"].Value) : (int?)null
                     });
@@ -198,7 +197,7 @@ namespace Misaki.Services
             public string Class;
             public string CardUrl;
             public CGSet BaseCG;
-            public List<Stat> Stats;
+            public Dictionary<string, Stat> Stats;
             public IDictionary<string, CGSet> CGVariant;
 
             public struct CGSet
@@ -209,22 +208,21 @@ namespace Misaki.Services
 
             public struct Stat
             {
-                public string Name;
                 public int Base;
                 public int? Max;
 
                 public override string ToString()
                 {
-                    return Max.HasValue ? $"{Name}: {Base} ({Max})" : $"{Name}: {Base}";
+                    return Max.HasValue ? $"{Base} ({Max})" : $"{Base}";
                 }
             }
 
             public Embed ToEmbed(string url)
             {
                 string statsString = string.Empty;
-                Stats.ForEach(stat =>
+                Stats.Foreach(stat =>
                 {
-                    statsString += $"{stat.ToString()} \n";
+                    statsString += $"{stat.Key}: {stat.Value.ToString()} \n";
                 });
 
                 return new EmbedBuilder()
