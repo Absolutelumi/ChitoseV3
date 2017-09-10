@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.WebSocket;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Misaki.Services
         private static readonly Regex ShipInformationExtractor = new Regex(@"class=""infobox-kai-header-major""[^>]*title=""(?<rarity>[^""]*).*\n.*<strong class=""selflink"">(?<english_name>[^<]*).*\n.*No\.(<[^>]*>)?(?<number>\d*).*title=""(?<kana_name>[^""]*).*"">(?<kanji_name>[^<]*).*\n.*>(?<class>[^<]*)</b>.*\n.*\n.*\n.*src=""(?<image>[^""]*)");
         private static readonly Regex ShipListExtractor = new Regex(@"(\n|(<p>))<a href=""/wiki/(?<page_name>[^""]*)"" title=""[^""]*"">(?<ship_name>[^<]*)</a>[^<]*((<span[^>]*>[^<]*</span>&#32;)|(\n</p>))");
         private static readonly Regex ShipCGExtractor = new Regex(@"<img src=""(?<url>https://[^""]*)"".*data-image-name=""((?<type>[A-Z]*) )?(?<name>([a-zA-Z']+( ([a-zA-Z']+)|2)*( 20\d\d)?)|(I-\d+( ([a-zA-Z']+)|2)*( 20\d\d)?)) ((?<number>[\d]*) )?Full(?<damaged> Damaged)?\.png""");
+        private static readonly Regex ShipStatExtractor = new Regex(@"</a> (?<stat_name>\w+)\n<[^>]*><[^>]*> <[^>]*>(<span title=(""After marriage: (?<after_marriage>\d+))?[^>]*>)?(?<value>\d+)( \((?<max_value>\d+)\))?");
+
         private readonly IDictionary<string, string> ShipMap;
 
         public KancolleShipGirlHelper()
@@ -68,10 +71,12 @@ namespace Misaki.Services
         {
             string pageHtml = Extensions.GetHttpStream(new Uri($"http://kancolle.wikia.com/wiki/{pageName}")).ReadString();
             var match = ShipInformationExtractor.Match(pageHtml);
+            var statMatch = ShipStatExtractor.Match(pageHtml);
             var ships = new List<Ship>();
             while (match.Success)
             {
-                ships.Add(new Ship()
+                Ship ship;
+                ships.Add(ship = new Ship()
                 {
                     EnglishName = match.Groups["english_name"].Value,
                     Number = int.Parse(match.Groups["number"].Value),
@@ -81,8 +86,20 @@ namespace Misaki.Services
                     Class = match.Groups["class"].Value,
                     CardUrl = match.Groups["image"].Value,
                     BaseCG = new Ship.CGSet(),
-                    CGVariant = new Dictionary<string, Ship.CGSet>()
+                    CGVariant = new Dictionary<string, Ship.CGSet>(),
+                    Stats = new List<Ship.Stat>()
                 });
+                while (statMatch.Success)
+                {
+                    if (ship.Stats.Any(stat => stat.Name == statMatch.Groups["stat_name"].Value)) break;
+                    ship.Stats.Add(new Ship.Stat()
+                    {
+                        Name = statMatch.Groups["stat_name"].Value,
+                        Base = int.Parse(statMatch.Groups["value"].Value),
+                        Max = statMatch.Groups["max_value"].Success ? int.Parse(statMatch.Groups["max_value"].Value) : (int?)null
+                    });
+                    statMatch = statMatch.NextMatch();
+                }
                 match = match.NextMatch();
             }
             pageHtml = Extensions.GetHttpStream(new Uri($"http://kancolle.wikia.com/wiki/{pageName}/Gallery")).ReadString();
@@ -181,6 +198,7 @@ namespace Misaki.Services
             public string Class;
             public string CardUrl;
             public CGSet BaseCG;
+            public List<Stat> Stats;
             public IDictionary<string, CGSet> CGVariant;
 
             public struct CGSet
@@ -189,11 +207,30 @@ namespace Misaki.Services
                 public string DamagedUrl;
             }
 
+            public struct Stat
+            {
+                public string Name;
+                public int Base;
+                public int? Max;
+
+                public override string ToString()
+                {
+                    return Max.HasValue ? $"{Name}: {Base} ({Max})" : $"{Name}: {Base}";
+                }
+            }
+
             public Embed ToEmbed(string url)
             {
+                string statsString = string.Empty;
+                Stats.ForEach(stat =>
+                {
+                    statsString += $"{stat.ToString()} \n";
+                });
+
                 return new EmbedBuilder()
                     .WithTitle(KanjiName == EnglishName ? KanjiName : $"{KanjiName} - {EnglishName}")
                     .WithAuthor(Class)
+                    .WithDescription(statsString)
                     .WithImageUrl(url)
                     .WithColor(Extensions.GetRarityColor(Rarity))
                     .Build();

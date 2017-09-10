@@ -16,7 +16,7 @@ namespace Misaki.Services
             string statsString = default(string);
             user.Stats.Find(e => e.Mode == mode && e.Region == Region.NA).Stats.OrderBy<StatModel, int>(e => e.Stat.Count()).Foreach(e =>
             {
-                if (e.Rank.HasValue && relevantStats.Contains(e.Stat)) statsString = statsString + $"{e.Stat}  -  #{e.Rank}  -  {e.Value} \n";
+                if (e.Rank.HasValue && relevantStats.Contains(e.Stat)) statsString += $"{e.Stat}  -  #{e.Rank}  -  {e.Value} \n";
             });
 
             return new EmbedBuilder()
