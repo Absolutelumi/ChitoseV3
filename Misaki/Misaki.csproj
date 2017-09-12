@@ -242,10 +242,10 @@
     <Compile Include="Objects\KancolleShipGirlMessage.cs" />
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\NsfwManager.cs" />
+    <Compile Include="Objects\Playlist.cs" />
     <Compile Include="Objects\Poll.cs" />
     <Compile Include="Objects\ReactionListener.cs" />
     <Compile Include="Objects\ScoreImage.cs" />
-    <Compile Include="Objects\TypeReaders.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -273,6 +273,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

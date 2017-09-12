@@ -9,7 +9,7 @@ namespace Misaki.Modules
         [Command("Help")]
         public Task GetHelp()
         {
-            new HelpMenu();
+            new HelpMenu(Context.Channel);
             return Task.CompletedTask;
         }
     }

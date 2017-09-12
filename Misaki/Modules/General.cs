@@ -9,6 +9,8 @@ namespace Misaki.Modules
 {
     public class General : ModuleBase
     {
+        public static IEmote Emote = new Emoji("😩");
+
         [Command("getav"), Summary("Gets avatar of user")]
         public async Task GetAv(IGuildUser user = null)
         {

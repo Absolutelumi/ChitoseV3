@@ -15,23 +15,26 @@ namespace Misaki.Services
 {
     public class MusicService
     {
+        
+
         private static readonly YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
         {
             ApiKey = Keys.GoogleApiKey
         });
 
-        private ICollection<Song> Playlist { get; set; }
-
         public void AddToPlaylist(string song)
         {
+
         }
 
         public async Task AddToQueue(string song)
         {
+
         }
 
         public void CreatePlalist(string playlistName)
         {
+
         }
 
         public async Task SendAsync(IAudioClient client, string path)
@@ -76,11 +79,10 @@ namespace Misaki.Services
 
         private void LoadPlaylist(string playlistName, IGuild guild)
         {
-            // TODO: XML file that organizes by: server -> playlist -> song
-            Playlist = new Collection<Song>();
+            
         }
 
-        private class Song
+        public class Song
         {
             public string Title;
             public string Url;
