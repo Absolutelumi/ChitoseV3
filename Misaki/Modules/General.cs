@@ -12,7 +12,7 @@ namespace Misaki.Modules
         public static IEmote Emote = new Emoji("😩");
 
         [Command("getav"), Summary("Gets avatar of user")]
-        public async Task GetAv(IGuildUser user = null)
+        public async Task GetAv(IGuildUser user)
         {
             user = user ?? Context.User as IGuildUser;
             await ReplyAsync(user.GetAvatarUrl());

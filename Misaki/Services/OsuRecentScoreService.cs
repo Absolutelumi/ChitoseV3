@@ -26,7 +26,7 @@ namespace Misaki.Services
         {
             GetUsers();
 
-            OsuChannel = Client.GetGuild(220673514720591872).GetChannel(316390541162053634) as IMessageChannel;
+            OsuChannel = Client.GetGuild(220673514720591872).GetChannel(272236614196133888) as IMessageChannel;
 
             var timer = new System.Timers.Timer(30000);
             timer.AutoReset = true;

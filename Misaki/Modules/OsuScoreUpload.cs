@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Misaki.Services;
 using System.Threading.Tasks;
 
@@ -6,6 +7,8 @@ namespace Misaki.Modules
 {
     public class OsuScoreUpload : ModuleBase
     {
+        public static IEmote Emote = new Emoji("🅾");
+
         public OsuRecentScoreService OsuScoreServ { get; set; }
 
         [Command("follow"), Summary("Subscribes user to get score images for every ranked score in osu!")]

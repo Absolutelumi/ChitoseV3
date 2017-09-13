@@ -26,11 +26,11 @@ namespace Misaki.Objects
 
             GetTabs();
 
-            HelpMessageEmbed = Tabs.First().Value;
+            HelpMessageEmbed = Tabs.Where(tab => tab.Value.Title == "General").First().Value;
 
-            SendMessageAsync().GetAwaiter();
+            bool success = SendMessage().Result;
 
-            if (HelpMessage != null) SetupListener();
+            SetupListener();
 
             var timer = new Timer(1000 * 60 * 10);
             timer.Elapsed += async (_, __) =>
@@ -41,19 +41,20 @@ namespace Misaki.Objects
             };
         }
 
-        private async Task SendMessageAsync()
+        private async Task<bool> SendMessage()
         {
             if (HelpMessage != null) await HelpMessage.ModifyAsync(msg =>
             {
                 msg.Embed = HelpMessageEmbed;
             });
-            HelpMessage = await Channel.SendMessageAsync(string.Empty, embed: HelpMessageEmbed);
+            else HelpMessage = await Channel.SendMessageAsync(string.Empty, embed: HelpMessageEmbed);
+            return true;
         }
 
         private async Task UpdateMessageAsync(IEmote emote, ReactionListener.Action action)
         {
             HelpMessageEmbed = Tabs.Where(tab => tab.Key.Equals(emote)).First().Value;
-            await SendMessageAsync();
+            await SendMessage();
         }
 
         private void SetupListener()
@@ -85,23 +86,42 @@ namespace Misaki.Objects
         private string BuildModuleDescription(System.Type module)
         {
             string moduleDescription = string.Empty;
-            Dictionary<CommandAttribute, SummaryAttribute> CommandSummary = new Dictionary<CommandAttribute, SummaryAttribute>();
+            List<CommandInfo> CommandSummary = new List<CommandInfo>();
 
             foreach (var method in module.GetMethods())
             {
                 var commandAttribute = (CommandAttribute)method.GetCustomAttribute(typeof(CommandAttribute), true);
                 if (commandAttribute == null) continue;
                 var summaryAttribute = (SummaryAttribute)method.GetCustomAttribute(typeof(SummaryAttribute), true) ?? new SummaryAttribute("No summary given.");
+                var parameters = method.GetParameters();
 
-                CommandSummary.Add(commandAttribute, summaryAttribute);
+                CommandSummary.Add(new CommandInfo()
+                {
+                    Name = commandAttribute.Text,
+                    Parameters = parameters,
+                    CommandDescription = summaryAttribute.Text
+                });
             }
 
             foreach (var command in CommandSummary)
             {
-                moduleDescription += $"!{command.Key.Text} => {command.Value.Text} \n";
+                string paramString = string.Empty;
+                foreach (var param in command.Parameters)
+                {
+                    string paramStuff = param.IsOptional ? $"{param.Name} = {param.DefaultValue}" : param.Name;
+                    paramString += $" <{paramStuff}> ";
+                }
+                moduleDescription += $"\n !{command.Name} {paramString}  ->  {command.CommandDescription} \n";
             }
 
             return moduleDescription;
+        }
+
+        private struct CommandInfo
+        {
+            public string Name;
+            public System.Reflection.ParameterInfo[] Parameters;
+            public string CommandDescription;
         }
     }
 }

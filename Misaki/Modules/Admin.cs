@@ -12,6 +12,8 @@ namespace Misaki.Modules
 {
     public class Admin : ModuleBase
     {
+        public static IEmote Emote = new Emoji("👮");
+
         private const double Gigabyte = 1024 * 1024 * 1024;
         private const double Megabyte = 1024 * 1024;
         private const double Kilobyte = 1024;

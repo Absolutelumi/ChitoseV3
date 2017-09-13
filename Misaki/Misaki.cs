@@ -10,7 +10,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace Misaki
 {
-    public class Misaki : IDisposable
+    public class Misaki 
     {
         public static readonly string ConfigPath = Properties.Settings.Default.ConfigDirectory;
         public static readonly string FfmpegPath = Properties.Settings.Default.TempDirectory;
@@ -24,24 +24,6 @@ namespace Misaki
         private DiscordSocketConfig clientConfig;
 
         public Misaki() => StartAsync().GetAwaiter().GetResult();
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (Disposed) return;
-
-            if (disposing)
-            {
-                Client.Dispose();
-            }
-
-            Disposed = true;
-        }
 
         private int GetUserCount(DiscordSocketClient client)
         {
@@ -113,8 +95,8 @@ namespace Misaki
 
             Client.Disconnected += (_) =>
             {
-                this.Dispose();
-                new Misaki();
+                Client.Dispose();
+                Client = new DiscordSocketClient(clientConfig);
                 return Task.CompletedTask;
             };
 

@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Misaki.Objects;
 using Misaki.Services;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Misaki.Modules
 {
     public class KancolleModule : ModuleBase
     {
+        public static IEmote Emote = new Emoji("🚢");
+
         public KancolleService KancolleService { get; set; }
 
         [Command("shipgirl"), Summary("Gets and returns shipgirl information")]
