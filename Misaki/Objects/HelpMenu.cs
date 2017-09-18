@@ -86,7 +86,7 @@ namespace Misaki.Objects
         private string BuildModuleDescription(System.Type module)
         {
             string moduleDescription = string.Empty;
-            List<CommandInfo> CommandSummary = new List<CommandInfo>();
+            List<CommandInfo> Commands = new List<CommandInfo>();
 
             foreach (var method in module.GetMethods())
             {
@@ -95,15 +95,15 @@ namespace Misaki.Objects
                 var summaryAttribute = (SummaryAttribute)method.GetCustomAttribute(typeof(SummaryAttribute), true) ?? new SummaryAttribute("No summary given.");
                 var parameters = method.GetParameters();
 
-                CommandSummary.Add(new CommandInfo()
+                Commands.Add(new CommandInfo()
                 {
                     Name = commandAttribute.Text,
                     Parameters = parameters,
-                    CommandDescription = summaryAttribute.Text
+                    Summary = summaryAttribute.Text
                 });
             }
 
-            foreach (var command in CommandSummary)
+            foreach (var command in Commands)
             {
                 string paramString = string.Empty;
                 foreach (var param in command.Parameters)
@@ -111,7 +111,7 @@ namespace Misaki.Objects
                     string paramStuff = param.IsOptional ? $"{param.Name} = {param.DefaultValue}" : param.Name;
                     paramString += $" <{paramStuff}> ";
                 }
-                moduleDescription += $"\n !{command.Name} {paramString}  ->  {command.CommandDescription} \n";
+                moduleDescription += $"\n !{command.Name} {paramString}  ->  {command.Summary} \n";
             }
 
             return moduleDescription;
@@ -121,7 +121,7 @@ namespace Misaki.Objects
         {
             public string Name;
             public System.Reflection.ParameterInfo[] Parameters;
-            public string CommandDescription;
+            public string Summary;
         }
     }
 }

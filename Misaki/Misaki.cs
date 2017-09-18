@@ -5,8 +5,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
+using System.Diagnostics;
+using System.IO;
 
 namespace Misaki
 {
@@ -95,8 +95,11 @@ namespace Misaki
 
             Client.Disconnected += (_) =>
             {
-                Client.Dispose();
-                Client = new DiscordSocketClient(clientConfig);
+                Process.Start(new ProcessStartInfo()
+                {
+                    FileName = Directory.GetCurrentDirectory() + "Misaki.exe"
+                });
+                Environment.Exit(0);
                 return Task.CompletedTask;
             };
 

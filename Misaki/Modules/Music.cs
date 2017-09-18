@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Misaki.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,11 +11,7 @@ namespace Misaki.Modules
     {
         private MusicService MusicService { get; set; }
 
-        [Command("addtoplaylist")]
-        public async Task AddToPlaylist(string song)
-        {
-            MusicService.AddToPlaylist(song);
-        }
+        private List<MusicManager> MusicManagers { get; set; }
 
         [Command("join"), Summary("Joins specified voice channel or if left null joins commanding user's")]
         public async Task Join(IVoiceChannel voiceChannel = null)
@@ -32,13 +29,36 @@ namespace Misaki.Modules
                 return;
             }
 
-            await MusicService.SendAsync(await voiceChannel.ConnectAsync(), "path");
+            MusicManagers.Add(new MusicManager(Context.Guild));
+            await MusicService.SendAsync(await voiceChannel.ConnectAsync(), Misaki.FfmpegPath);
+        }
+
+        [Command("leave"), Summary("Leaves voice channel if connected")]
+        public async Task Leave(IVoiceChannel voiceChannel = null)
+        {
+            voiceChannel = voiceChannel ?? (Context.Message.Author as IGuildUser)?.VoiceChannel;
+
+            if (voiceChannel == null)
+            {
+                await ReplyAsync("Not connected to a chennel.");
+                return;
+            }
+
+            var audioManger = MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault();
+            await audioManger.AudioChannel.StopAsync();
+            audioManger.AudioChannel.Dispose();
         }
 
         [Command("play")]
         public async Task Play(string song)
         {
-            await MusicService.AddToQueue(song);
+            var serverMusicManager = MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault();
+            if (serverMusicManager == null)
+            {
+                await Join();
+                var songResult = MusicService.GetBestResult(song.Split(' ')).Result;
+                MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault().AddToQueue(new MusicService.Song());
+            }
         }
     }
 }

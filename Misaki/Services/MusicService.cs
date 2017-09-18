@@ -15,27 +15,10 @@ namespace Misaki.Services
 {
     public class MusicService
     {
-        
-
         private static readonly YouTubeService youtubeService = new YouTubeService(new BaseClientService.Initializer()
         {
             ApiKey = Keys.GoogleApiKey
         });
-
-        public void AddToPlaylist(string song)
-        {
-
-        }
-
-        public async Task AddToQueue(string song)
-        {
-
-        }
-
-        public void CreatePlalist(string playlistName)
-        {
-
-        }
 
         public async Task SendAsync(IAudioClient client, string path)
         {
@@ -47,19 +30,7 @@ namespace Misaki.Services
             await discord.FlushAsync();
         }
 
-        private Process CreateStream(string path)
-        {
-            var ffmpeg = new ProcessStartInfo
-            {
-                FileName = "ffmpeg",
-                Arguments = $"-p {path} -ac 2 -f s16le -ar 48000 pipe:1",
-                UseShellExecute = false,
-                RedirectStandardOutput = true
-            };
-            return Process.Start(ffmpeg);
-        }
-
-        private async Task<SearchResult> GetBestResult(IEnumerable<string> searchTerms)
+        public async Task<SearchResult> GetBestResult(IEnumerable<string> searchTerms)
         {
             var searchRequest = youtubeService.Search.List("snippet");
             searchRequest.Order = SearchResource.ListRequest.OrderEnum.Relevance;
@@ -77,15 +48,28 @@ namespace Misaki.Services
             return null;
         }
 
-        private void LoadPlaylist(string playlistName, IGuild guild)
+        private Process CreateStream(string path)
         {
-            
+            var ffmpeg = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = $"-p {path} -ac 2 -f s16le -ar 48000 pipe:1",
+                UseShellExecute = false,
+                RedirectStandardOutput = true
+            };
+            return Process.Start(ffmpeg);
         }
 
         public class Song
         {
             public string Title;
             public string Url;
+
+            public Song(string title, string url)
+            {
+                Title = title;
+                Url = url;
+            }
         }
     }
 }

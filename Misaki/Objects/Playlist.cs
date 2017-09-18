@@ -6,14 +6,16 @@ namespace Misaki.Objects
 {
     public class Playlist
     {
+        public string PlaylistName { get; set; }
+
         private List<Song> Songs { get; set; }
 
         private Song CurrentSong { get; set; }
 
-        private static readonly string PlaylistPath = Misaki.ConfigPath + "Playlists.txt";
-
-        public Playlist()
+        public Playlist(string playlistName, List<Song> songs)
         {
+            PlaylistName = playlistName;
+            Songs = songs;
             CurrentSong = Songs.First();
         }
 

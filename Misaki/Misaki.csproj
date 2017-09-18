@@ -256,6 +256,7 @@
     <Compile Include="Services\KancolleSeasonalMap.cs" />
     <Compile Include="Services\KancolleService.cs" />
     <Compile Include="Services\KancolleShipGirlHelper.cs" />
+    <Compile Include="Services\MusicManager.cs" />
     <Compile Include="Services\PubgService.cs" />
     <Compile Include="Services\RoleManageService.cs" />
     <Compile Include="Services\AnnounceService.cs" />
