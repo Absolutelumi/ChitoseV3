@@ -1,5 +1,7 @@
 ﻿using Discord.WebSocket;
+using Discord;
 using System.Linq;
+using System;
 
 namespace Misaki.Services
 {
@@ -12,22 +14,33 @@ namespace Misaki.Services
             client.UserJoined += async (user) =>
             {
                 SocketGuild guild = user.Guild;
-                SocketRole newRole = guild.Roles.Where(role => role.Name == "New").FirstOrDefault();
+                SocketRole newRole = guild.Roles.Where(role => role.Name == "Regular").FirstOrDefault();
 
                 if (newRole == null) return;
 
                 await user.AddRoleAsync(newRole);
             };
 
-            //client.UserUpdated += async (oldUser, newUser) =>
-            //{
-            //    SocketGuildUser prevUser = oldUser as SocketGuildUser;
-            //    SocketGuildUser currUser = newUser as SocketGuildUser;
-            //    if (IsRole(prevUser) && prevUser.Game.HasValue) await prevUser.AddRoleAsync(await prevUser.Guild.CreateRoleAsync(prevUser.Game?.Name));
-            //    if (IsRole(currUser) && currUser.Game.HasValue) await currUser.AddRoleAsync(await currUser.Guild.CreateRoleAsync(currUser.Game?.Name));
-            //};
-        }
+            client.GuildMemberUpdated += async (oldUserState, newUserState) =>
+            {
+                if (oldUserState.Game == null && newUserState.Game == null) return;
 
-        private bool IsRole(SocketGuildUser user) => user.Guild.Roles.Any(role => role.Name == user.Game?.Name);
+                var hasValueState = oldUserState.Game.HasValue ? oldUserState : newUserState;
+                string gameName = hasValueState.Game?.Name.ToTitleCase();
+
+                if (hasValueState.Guild.Roles.Any(role => role.Name == gameName))
+                {
+                    await hasValueState.AddRoleAsync(hasValueState.Guild.Roles.Where(role => role.Name == gameName).First());
+                    return;
+                }
+
+                var newRole = await hasValueState.Guild.CreateRoleAsync(gameName, color: Extensions.GetRandomColor());
+                await newRole.ModifyAsync(role =>
+                {
+                    role.Mentionable = true;
+                });
+                await hasValueState.AddRoleAsync(newRole);
+            };
+        }
     }
 }

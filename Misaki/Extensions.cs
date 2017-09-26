@@ -263,5 +263,10 @@ namespace Misaki
         {
             return HttpUtility.UrlEncode(text);
         }
+
+        public static Discord.Color GetRandomColor()
+        {
+            return new Discord.Color(rng.Next(0, 256), rng.Next(0, 256), rng.Next(0, 256));
+        }
     }
 }

@@ -57,7 +57,7 @@ namespace Misaki.Modules
             {
                 await Join();
                 var songResult = MusicService.GetBestResult(song.Split(' ')).Result;
-                MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault().AddToQueue(new MusicService.Song());
+                //MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault().AddToQueue(new MusicService.Song());
             }
         }
     }

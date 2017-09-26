@@ -60,11 +60,11 @@ namespace Misaki.Services
                 foreach (var song in playlistSongs)
                 {
                     var songInfo = song.Split(':');
-                    songs.Add(new Song()
-                    {
-                        Title = songInfo[0],
-                        Url = songInfo[1]
-                    });
+                    //songs.Add(new Song()
+                    //{
+                    //    Title = songInfo[0],
+                    //    Url = songInfo[1]
+                    //});
                 }
 
                 Playlists.Add(new Playlist(playlistName, songs));
