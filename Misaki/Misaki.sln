@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsuApi", "..\..\Osu-Sharp\O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PUBGSharp", "..\..\PUBGSharp-master\PUBGSharp\PUBGSharp.csproj", "{B622B2D0-DC5A-40AD-B608-477CAE002072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitsuSharp", "C:\Users\Scott\Documents\Visual Studio 2017\Projects\KitsuSharp\KitsuSharp\KitsuSharp.csproj", "{B88BCBC0-EDD5-471E-9781-54AFFA81E3BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitsuSharp", "..\KitsuSharp\KitsuSharp\KitsuSharp.csproj", "{B88BCBC0-EDD5-471E-9781-54AFFA81E3BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
