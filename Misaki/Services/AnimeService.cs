@@ -2,6 +2,8 @@
 using Misaki.Objects;
 using System.Text;
 using System.Text.RegularExpressions;
+using KitsuSharp;
+using KitsuSharp.Models;
 
 namespace Misaki.Services
 {
@@ -9,33 +11,28 @@ namespace Misaki.Services
     {
         private static readonly Regex TagMatcher = new Regex("<.*>|\\[/?i\\]");
 
+        private static readonly Api KitsuApi = new Api();
+
         public Embed FindAndFormatAnimeResult(string animeTitle)
         {
-            var animeResult = Mal.FindMyAnime(animeTitle, "Absolutelumi", Keys.MalPassword);
-            if (animeResult.title == null) return new EmbedBuilder().WithTitle("Anime not found!").Build();
-            string description = TagMatcher.Replace(animeResult.synopsis, string.Empty);
-            System.Drawing.Color bestColor = Extensions.GetBestColor(animeResult.image);
+            var animeResult = KitsuApi.GetAnime.WithTitle(animeTitle).Result().Result;
+            if (animeResult == null) return new EmbedBuilder().WithTitle("Anime not found!").Build();
+            string description = TagMatcher.Replace(animeResult.Synopsis, string.Empty);
+            System.Drawing.Color bestColor = Extensions.GetBestColor(animeResult.PosterImage.medium);
             Discord.Color bestDiscordColor = new Discord.Color(bestColor.R, bestColor.G, bestColor.B);
             return new EmbedBuilder()
-                .WithThumbnailUrl(animeResult.image)
-                .WithTitle(animeResult.title)
+                .WithThumbnailUrl(animeResult.PosterImage.original)
+                .WithTitle(animeResult.Titles.en_jp)
                 .WithDescription(new StringBuilder()
-                    .AppendLine(RemoveWrittenBy(description))
+                    .AppendLine(description)
                     .AppendLine()
-                    .AppendLine($"{animeResult.type} - {animeResult.status}")
+                    .AppendLine($"{animeResult.ShowType.ToString().ToTitleCase()} - {animeResult.Status.ToString().ToTitleCase()}")
                     .AppendLine()
-                    .AppendLine($"{animeResult.episodes?.ToString()} episodes" ?? "Unknown")
+                    .AppendLine($"{animeResult.EpisodeCount} episodes")
                     .ToString())
-                .WithUrl(animeResult.url)
                 .WithColor(bestDiscordColor)
-                .WithFooter($"{animeResult.startDate}   -   {animeResult.endDate}")
+                .WithFooter($"{animeResult.StartDate}   -   {animeResult.EndDate}")
                 .Build();
-        }
-
-        private string RemoveWrittenBy(string description)
-        {
-            if (description.Contains("[Written by MAL Rewrite]")) return description.Remove(description.Length - 24).Trim();
-            return description;
         }
     }
 }

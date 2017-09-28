@@ -32,7 +32,11 @@ namespace Misaki.Services
                 {
                     foreach (var VC in client.GetGuild(ulong.Parse(guild)).VoiceChannels)
                     {
-                        await UpdateVC(VC);
+                        try
+                        {
+                            await UpdateVC(VC);
+                        }
+                        catch (Exception e) { Extensions.ManageException(e); }
                     }
                 }
             };

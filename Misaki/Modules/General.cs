@@ -3,13 +3,18 @@ using Discord.Commands;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Script.Serialization;
 
 namespace Misaki.Modules
 {
     public class General : ModuleBase
     {
         public static IEmote Emote = new Emoji("😩");
+
+        private static JavaScriptSerializer Json = new JavaScriptSerializer();
 
         [Command("getav"), Summary("Gets avatar of user")]
         public async Task GetAv(IGuildUser user)
@@ -50,5 +55,51 @@ namespace Misaki.Modules
             var rolls = Enumerable.Range(0, rollCount).Select(_ => Extensions.rng.Next(1, sides + 1));
             await ReplyAsync(":game_die: " + string.Join(" , ", rolls));
         }
+
+        [Command("Dosamsshit")]
+        public async Task TheShit(string anime)
+        {
+            var animeRequest = WebRequest.CreateHttp($"https://kitsu.io/api/edge/anime?filter[text]={HttpUtility.UrlEncode(anime)}");
+            using (var responseStream = animeRequest.GetResponse().GetResponseStream())
+            {
+                string json = new StreamReader(responseStream).ReadToEnd();
+                var test = Json.Deserialize<SearchResponse>(json);
+                await ReplyAsync(test.data.First().attributes.titles.en);
+            }
+        }
+    }
+
+    public class SearchResponse
+    {
+        public AnimeData[] data;
+    }
+
+    public class AnimeData
+    {
+        public Attributes attributes;
+    }
+
+    public class Attributes
+    {
+        public string synopsis;
+        public Titles titles;
+        public ImageSet posterImage;
+        public ImageSet coverImage;
+    }
+
+    public class Titles
+    {
+        public string en;
+        public string en_jp;
+        public string ja_jp;
+    }
+
+    public class ImageSet
+    {
+        public string tiny;
+        public string small;
+        public string medium;
+        public string large;
+        public string original;
     }
 }

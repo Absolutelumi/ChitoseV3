@@ -93,16 +93,6 @@ namespace Misaki
 
             Client.JoinedGuild += HandleBotJoinedGuild;
 
-            Client.Disconnected += (_) =>
-            {
-                Process.Start(new ProcessStartInfo()
-                {
-                    FileName = Directory.GetCurrentDirectory() + "Misaki.exe"
-                });
-                Environment.Exit(0);
-                return Task.CompletedTask;
-            };
-
             await Task.Delay(-1);
         }
 

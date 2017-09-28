@@ -10,5 +10,7 @@
         public static readonly string MalPassword = Properties.Settings.Default.MALPassword;
         public static readonly string OsuApiKey = Properties.Settings.Default.OsuApiKey;
         public static readonly string PubgKey = Properties.Settings.Default.PubgKey;
+        public static readonly string KitsuId = Properties.Settings.Default.KitsuClientID;
+        public static readonly string KitsuSecret = Properties.Settings.Default.KitsuClientSecret;
     }
 }
