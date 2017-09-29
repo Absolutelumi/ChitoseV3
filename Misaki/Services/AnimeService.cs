@@ -29,7 +29,7 @@ namespace Misaki.Services
                     .AppendLine($"{animeResult.EpisodeCount} episodes")
                     .ToString())
                 .WithColor(bestDiscordColor)
-                .WithFooter($"{animeResult.StartDate}   -   {animeResult.EndDate}")
+                .WithFooter($"{animeResult.StartDate?.ToString("MMMM dd, yyyy")}   -   {animeResult.EndDate?.ToString("MMMM dd, yyyy")}")
                 .Build();
         }
     }
