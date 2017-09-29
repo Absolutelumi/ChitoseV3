@@ -21,18 +21,23 @@ namespace KitsuSharp.Queries
             var jsonResponse = await GetJsonResponse("filter", "anime");
             var animes = jsonResponse.Deserialize<AnimeResponse>().data;
             var input = Parameters["text"];
-            return animes.OrderByDescending(anime =>
+            var sortedResults = animes.Select(anime =>
             {
                 var englishSimilarity = Extensions.CalculateSimilarity(input, anime.Titles.English);
                 var romanizedSimilarity = Extensions.CalculateSimilarity(input, anime.Titles.Romanized);
                 var japaneseSimilarity = Extensions.CalculateSimilarity(input, anime.Titles.Japanese);
-                return Math.Min(Math.Min(englishSimilarity, romanizedSimilarity), japaneseSimilarity);
-            }).FirstOrDefault();
+                return new
+                {
+                    Similarity = Math.Max(Math.Max(englishSimilarity, romanizedSimilarity), japaneseSimilarity),
+                    Anime = anime
+                };
+            }).OrderByDescending(result => result.Similarity);
+            return sortedResults.FirstOrDefault().Anime;
         }
 
         public IAnimeQuery WithTitle(string title)
         {
-            Parameters["text"] = title.UrlEncode();
+            Parameters["text"] = title;
             return this;
         }
     }

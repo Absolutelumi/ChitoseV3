@@ -19,7 +19,7 @@ namespace KitsuSharp.Queries
 
         protected async Task<string> GetJsonResponse(string endpointPrefix, string endpoint)
         {
-            var queryString = string.Join("&", Parameters.Select(pair => $"filter[{pair.Key}]={pair.Value}"));
+            var queryString = string.Join("&", Parameters.Select(pair => $"filter[{pair.Key}]={pair.Value.UrlEncode()}"));
             var request = WebRequest.CreateHttp($"https://kitsu.io/api/edge/{endpoint}?{queryString}");
             var response = await request.GetResponseAsync();
             return new StreamReader(response.GetResponseStream()).ReadToEnd();
