@@ -26,7 +26,7 @@ namespace KitsuSharp.Queries
                 var englishSimilarity = Extensions.CalculateSimilarity(input, anime.Titles.English);
                 var romanizedSimilarity = Extensions.CalculateSimilarity(input, anime.Titles.Romanized);
                 var japaneseSimilarity = Extensions.CalculateSimilarity(input, anime.Titles.Japanese);
-                return Math.Min(Math.Min(englishSimilarity, romanizedSimilarity), japaneseSimilarity);
+                return Math.Max(Math.Max(englishSimilarity, romanizedSimilarity), japaneseSimilarity);
             }).FirstOrDefault();
         }
 
