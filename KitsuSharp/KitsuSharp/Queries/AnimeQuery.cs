@@ -1,11 +1,8 @@
 ﻿using KitsuSharp.Models;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Script.Serialization;
 
 namespace KitsuSharp.Queries
 {
@@ -21,7 +18,14 @@ namespace KitsuSharp.Queries
         public async Task<Anime> Result()
         {
             var jsonResponse = await GetJsonResponse("filter", "anime");
-            return new JavaScriptSerializer().Deserialize<AnimeResponse>(jsonResponse).data.First();
+            var animes = jsonResponse.Deserialize<AnimeResponse>().data; 
+            KeyValuePair<Anime, double> mostSimilarAnime = new KeyValuePair<Anime, double>();
+            foreach (var anime in animes)
+            {
+                int distance = Extensions.ComputeLevenshteinDistance(anime.Titles.en, Parameters["text"]);
+                if (mostSimilarAnime.Key == null || mostSimilarAnime.Value > distance) mostSimilarAnime = new KeyValuePair<Anime, double>(anime, distance);
+            }
+            return mostSimilarAnime.Key;
         }
 
         public IAnimeQuery WithTitle(string title)
@@ -35,4 +39,13 @@ namespace KitsuSharp.Queries
     {
         public Anime[] data;
     }
+}
+
+[DataContract]
+public class SearchResponse
+{
+    public Anime[] Results => data;
+
+    [DataMember]
+    internal Anime[] data;
 }

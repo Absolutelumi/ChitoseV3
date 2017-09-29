@@ -24,7 +24,7 @@ namespace KitsuSharp.Models
         special
     }
 
-    public enum Subtype
+    public enum SubType
     {
         ONA,
         OVA,

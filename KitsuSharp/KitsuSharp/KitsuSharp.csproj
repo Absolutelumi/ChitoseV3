@@ -47,10 +47,11 @@
     <Compile Include="Api.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\Anime.cs" />
-    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Episode.cs" />
-    <Compile Include="Models\Manga.cs" />
+    <Compile Include="Models\ImageSet.cs" />
+    <Compile Include="Models\Links.cs" />
+    <Compile Include="Models\Titles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\AnimeQuery.cs" />
     <Compile Include="Queries\Query.cs" />

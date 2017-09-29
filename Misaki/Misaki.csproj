@@ -292,6 +292,10 @@
       <Project>{b622b2d0-dc5a-40ad-b608-477cae002072}</Project>
       <Name>PUBGSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\KitsuSharp\KitsuSharp\KitsuSharp.csproj">
+      <Project>{b88bcbc0-edd5-471e-9781-54affa81e3bc}</Project>
+      <Name>KitsuSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="backg_copy_I6b_icon.ico" />
