@@ -244,7 +244,6 @@
     <Compile Include="Objects\KancolleShipGirlMessage.cs" />
     <Compile Include="Objects\Keys.cs" />
     <Compile Include="Objects\NsfwManager.cs" />
-    <Compile Include="Objects\Playlist.cs" />
     <Compile Include="Objects\Poll.cs" />
     <Compile Include="Objects\ReactionListener.cs" />
     <Compile Include="Objects\ScoreImage.cs" />
@@ -263,7 +262,6 @@
     <Compile Include="Services\RoleManageService.cs" />
     <Compile Include="Services\AnnounceService.cs" />
     <Compile Include="Services\MalService.cs" />
-    <Compile Include="Services\MusicService.cs" />
     <Compile Include="Services\NSFWService.cs" />
     <Compile Include="Services\OsuRecentScoreService.cs" />
     <Compile Include="Extensions.cs" />

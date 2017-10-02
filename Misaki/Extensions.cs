@@ -216,7 +216,7 @@ namespace Misaki
             return HttpUtility.HtmlDecode(text);
         }
 
-        public static void ManageException(Exception e)
+        public static void HandleException(Exception e)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Exception thrown - {e.Message}");

@@ -36,7 +36,7 @@ namespace Misaki.Services
                         {
                             await UpdateVC(VC);
                         }
-                        catch (Exception e) { Extensions.ManageException(e); }
+                        catch (Exception e) { Extensions.HandleException(e); }
                     }
                 }
             };

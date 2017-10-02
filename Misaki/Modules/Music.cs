@@ -4,33 +4,32 @@ using Misaki.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Timers;
+using static Misaki.Services.MusicManager;
 
 namespace Misaki.Modules
 {
     public class Music : ModuleBase
     {
-        private MusicService MusicService { get; set; }
-
         private List<MusicManager> MusicManagers { get; set; }
+
+        public Music()
+        {
+            MusicManagers = new List<MusicManager>();
+        }
 
         [Command("join"), Summary("Joins specified voice channel or if left null joins commanding user's")]
         public async Task Join(IVoiceChannel voiceChannel = null)
         {
+            if (MusicManagers.Any(manager => manager.Guild.Id == Context.Guild.Id))
+            {
+                await ReplyAsync("Already Connected.");
+                return;
+            }
+
             voiceChannel = voiceChannel ?? (Context.Message.Author as IGuildUser)?.VoiceChannel;
 
-            if (voiceChannel == null)
-            {
-                await ReplyAsync("The commanding user must either specify a voice channel or be in a channel for me to join.");
-                return;
-            }
-            if (voiceChannel.GetUsersAsync().Count().Result == 0)
-            {
-                await ReplyAsync("I'm not joining a channel with no users in it! What fucking purpose does that have?!?");
-                return;
-            }
-
-            MusicManagers.Add(new MusicManager(Context.Guild));
-            await MusicService.SendAsync(await voiceChannel.ConnectAsync(), Misaki.FfmpegPath);
+            MusicManagers.Add(new MusicManager(Context.Guild, voiceChannel, Context.Channel));
         }
 
         [Command("leave"), Summary("Leaves voice channel if connected")]
@@ -45,20 +44,45 @@ namespace Misaki.Modules
             }
 
             var audioManger = MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault();
-            await audioManger.AudioChannel.StopAsync();
-            audioManger.AudioChannel.Dispose();
+            await audioManger.AudioClient.StopAsync();
+            audioManger.AudioClient.Dispose();
         }
 
         [Command("play")]
-        public async Task Play(string song)
+        public Task Play(string song)
         {
-            var serverMusicManager = MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault();
-            if (serverMusicManager == null)
+            var guildManager = MusicManagers.First(manager => manager.Guild.Id == Context.Guild.Id);
+            if (guildManager == null)
             {
-                await Join();
-                var songResult = MusicService.GetBestResult(song.Split(' ')).Result;
-                //MusicManagers.Where(manager => manager.Guild.Id == Context.Guild.Id).FirstOrDefault().AddToQueue(new MusicService.Song());
+                guildManager = new MusicManager(Context.Guild, (Context.User as IGuildUser).VoiceChannel, Context.Channel);
+                MusicManagers.Add(guildManager);
             }
+            guildManager.StartPlaying();
+            return Task.CompletedTask;
+        }
+
+        [Command("add")]
+        public Task AddSong(string song)
+        {
+            MusicManagers.First(manager => manager.Guild.Name == Context.Guild.Name).AddToQueue(song);
+            return Task.CompletedTask;
+        }
+
+        [Command("skip")]
+        public async Task SkipSong()
+        {
+            if (!IsManagerFor())
+            {
+                await ReplyAsync("Fuck off");
+                return;
+            }
+            MusicManagers.First(manager => manager.Guild.Name == Context.Guild.Name).Skip();
+        }
+
+        private bool IsManagerFor()
+        {
+            var guildManager = MusicManagers.First(manager => manager.Guild.Id == Context.Guild.Id);
+            return guildManager == null ? false : true;
         }
     }
 }

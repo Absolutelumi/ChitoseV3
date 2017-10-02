@@ -30,7 +30,6 @@ namespace Misaki.Objects
             .AddSingleton(new NSFWService())
             .AddSingleton(new KancolleService())
             .AddSingleton<AdminService>()
-            .AddSingleton<MusicService>()
             .AddSingleton<AnimeService>()
             .BuildServiceProvider();
 

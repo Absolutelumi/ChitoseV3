@@ -37,7 +37,7 @@ namespace Misaki.Services
                     }
                 }
             }
-            catch (Exception e) { Extensions.ManageException(e); }
+            catch (Exception e) { Extensions.HandleException(e); }
             return new AnimeResult() { valid = false };
         }
 
@@ -69,7 +69,7 @@ namespace Misaki.Services
                         };
                     }
                 }
-            } catch (Exception e) { Extensions.ManageException(e); }
+            } catch (Exception e) { Extensions.HandleException(e); }
             return new AnimeResult() { valid = false };
         } 
 
