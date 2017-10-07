@@ -91,6 +91,16 @@ namespace Misaki
                 await Client.SetGameAsync($"Serving {users} bakas");
             };
 
+            Client.Disconnected += (_) =>
+            {
+                Process.Start(new ProcessStartInfo()
+                {
+                    FileName = Directory.GetCurrentDirectory() + "Misaki.exe"
+                });
+                Environment.Exit(0);
+                return Task.CompletedTask;
+            };
+
             Client.JoinedGuild += HandleBotJoinedGuild;
 
             await Task.Delay(-1);

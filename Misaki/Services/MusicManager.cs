@@ -77,8 +77,9 @@ namespace Misaki.Services
 
         public MusicManager(IGuild guild, IAudioChannel audioChannel, IMessageChannel channel)
         {
-            Guild = Guild;
+            Guild = guild;
             AudioChannel = audioChannel;
+            AudioClient = AudioChannel.ConnectAsync().GetAwaiter().GetResult();
             Queue = new List<Song>();
             volume = 0.5f;
             paused = false;
@@ -338,7 +339,8 @@ namespace Misaki.Services
 
         private IMessageChannel GetMusicChannel()
         {
-            var chan = Guild.GetChannelsAsync().GetAwaiter().GetResult().First(channel => channel.Name.ToLower() == "music");
+            var channels = Guild.GetChannelsAsync().GetAwaiter().GetResult();
+            var chan = channels.First(channel => channel?.Name?.ToLower() == "music");
             if (chan == null)
             {
                 return null;

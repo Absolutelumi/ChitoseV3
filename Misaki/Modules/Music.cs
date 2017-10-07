@@ -57,6 +57,7 @@ namespace Misaki.Modules
                 guildManager = new MusicManager(Context.Guild, (Context.User as IGuildUser).VoiceChannel, Context.Channel);
                 MusicManagers.Add(guildManager);
             }
+            guildManager.AddToQueue(song);
             guildManager.StartPlaying();
             return Task.CompletedTask;
         }
