@@ -25,8 +25,8 @@ namespace Misaki.Services
         private static Post GetRandomPost(string[] arg, int? page = null)
         {
             StringBuilder urlBuilder = new StringBuilder();
-            var args = arg.Select(tag => $"*{tag}*");
-            urlBuilder.AppendFormat("https://danbooru.donmai.us/posts.json?limit=1&tags={0}&random=1", string.Join("%20", args));
+            arg = arg.Select(tag => $"*{tag}*").ToArray();
+            urlBuilder.AppendFormat("https://danbooru.donmai.us/posts.json?limit=1&tags={0}&random=1", string.Join("%20", arg));
             if (page != null)
             {
                 urlBuilder.AppendFormat("&page={0}", page);
@@ -38,7 +38,7 @@ namespace Misaki.Services
             {
                 WebResponse response = postRequest.GetResponse();
                 string postResponse = response.GetResponseStream().ReadString();
-                return postResponse == "[]" ? new Post() : json.Deserialize<Post[]>(postResponse).FirstOrDefault();
+                return json.Deserialize<Post[]>(postResponse).FirstOrDefault() ?? new Post();
             }
             catch (WebException)
             {
