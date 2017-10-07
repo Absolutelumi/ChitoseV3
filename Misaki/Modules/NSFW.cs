@@ -19,7 +19,7 @@ namespace Misaki.Modules
         public async Task ShowImage([Remainder]string keywords)
         {
             var image = DanbooruService.GetRandomImage(keywords.Split(' '));
-            bool isImage = image == null || image.Contains("png") || image.Contains("jpg") ? true : false;
+            bool isImage = image.Contains("png") || image.Contains("jpg");
             await ReplyAsync(string.Empty, embed: new EmbedBuilder()
                 .WithTitle(isImage ? string.Empty : "Image not found!")
                 .WithImageUrl(isImage ? image : string.Empty)

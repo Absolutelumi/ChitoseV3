@@ -38,8 +38,7 @@ namespace Misaki.Services
             {
                 WebResponse response = postRequest.GetResponse();
                 string postResponse = response.GetResponseStream().ReadString();
-                if (postResponse == "[]") return new Post();
-                return json.Deserialize<Post[]>(postResponse).FirstOrDefault();
+                return postResponse == "[]" ? new Post() : json.Deserialize<Post[]>(postResponse).FirstOrDefault();
             }
             catch (WebException)
             {
