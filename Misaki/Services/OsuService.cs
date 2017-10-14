@@ -221,7 +221,7 @@ namespace Misaki.Services
             return new EmbedBuilder()
                 .WithTitle(beatmap.Title)
                 .WithAuthor(beatmap.Artist)
-                .WithUrl(beatmap.Source)
+                .WithUrl(beatmap.BeatmapUrl)
                 .WithDescription(new StringBuilder()
                     .AppendLine($"{beatmap.Status.ToString()}")
                     .AppendLine($"Tags: {string.Join(" , ", beatmap.Tags)}")
@@ -240,15 +240,15 @@ namespace Misaki.Services
             Color discordColor = new Color(sysColor.R, sysColor.G, sysColor.B);
             Embed embed = new EmbedBuilder()
                 .WithTitle(beatmapSet.Title)
+                .WithUrl(OsuApi.GetBeatmapSet.WithSetId(beatmapSet.Id).Results().Result.First().BeatmapSetUrl)
                 .WithAuthor(beatmapSet.Artist)
-                .WithUrl(OsuApi.GetBeatmapSet.WithSetId(beatmapSet.Id).Results().Result.First().Source)
                 .WithDescription(new StringBuilder()
                     .AppendLine($"{beatmapSet.Status.ToString()}")
                     .AppendLine($"Length - {beatmapSet.Length}  Stars - {beatmapSet.Stars.ToString()}  Overall Difficulty - {beatmapSet.OverallDifficulty.ToString()}")
                     .AppendLine($"Approach Rate - {beatmapSet.ApproachRate.ToString()}  Circle Size - {beatmapSet.CircleSize.ToString()}  Bpm - {beatmapSet.Bpm}")
                     .ToString())
                 .WithImageUrl($"https://assets.ppy.sh/beatmaps/{beatmapSet.Id}/covers/cover.jpg")
-                .WithFooter(beatmapSet.Beatmapper, $"a.ppy.sh/{OsuApi.GetUser.WithUser(beatmapSet.Beatmapper).Result().Result.UserID}")
+                .WithFooter(beatmapSet.Beatmapper, $"http://a.ppy.sh/{OsuApi.GetUser.WithUser(beatmapSet.Beatmapper).Result().Result.UserID}")
                 .WithColor(discordColor)
                 .Build();
 

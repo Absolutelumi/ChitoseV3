@@ -19,11 +19,11 @@ namespace Misaki.Objects
         {
             // Services not used by modules
             new AnnounceService();
-            new RoleManageService();
 
             // Instantialize services that have functionality outside of being used in modules
             services = new ServiceCollection()
             .AddSingleton(Client)
+            .AddSingleton(new OsuService())
             .AddSingleton(new OsuRecentScoreService())
             .AddSingleton(new VoiceManageService())
             .AddSingleton(new PubgService())
