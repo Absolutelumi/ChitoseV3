@@ -95,7 +95,7 @@ namespace Misaki
             {
                 Process.Start(new ProcessStartInfo()
                 {
-                    FileName = Directory.GetCurrentDirectory() + "Misaki.exe"
+                    FileName = Directory.GetCurrentDirectory() + "\\Misaki.exe"
                 });
                 Environment.Exit(0);
                 return Task.CompletedTask;

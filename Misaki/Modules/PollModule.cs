@@ -12,7 +12,7 @@ namespace Misaki.Modules
         {
             var splitQuestion = question.Split(' ').ToList();
             int.TryParse(splitQuestion.Last(), out int minutes);
-            if (minutes == 0) minutes = 1;
+            if (minutes == 0) minutes = 20;
             else
             {
                 splitQuestion.RemoveAt(splitQuestion.Count() - 1);
