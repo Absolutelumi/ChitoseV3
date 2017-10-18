@@ -55,5 +55,17 @@ namespace Misaki.Modules
             var rolls = Enumerable.Range(0, rollCount).Select(_ => Extensions.rng.Next(1, sides + 1));
             await ReplyAsync(":game_die: " + string.Join(" , ", rolls));
         }
+
+        [Command("boredaf")]
+        public async Task Boredaf()
+        {
+            var message = await Context.Channel.SendFileAsync(Extensions.GetNumberImage(0), "numberImage.png");
+            for (int i = 1; i < 100; i++)
+            {
+                await message.DeleteAsync();
+                message = await Context.Channel.SendFileAsync(Extensions.GetNumberImage(i), "numberImage.png");
+                await Task.Delay(10000);
+            }
+        }
     }
 }

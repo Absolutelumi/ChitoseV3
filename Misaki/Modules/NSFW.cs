@@ -7,12 +7,14 @@ namespace Misaki.Modules
 {
     public class NSFW : ModuleBase
     {
+        public static IEmote Emote = new Emoji("♋️");
+
         public NSFWService NsfwService { get; set; }
 
         [Command("i")]
         public async Task GetRandomHentaiPic()
         {
-            await ReplyAsync(NsfwService.GetHentaiPic());
+            await ReplyAsync("Fuck I lost it");
         }
 
         [Command("show"), Summary("Gets random picture from danbooru corresponding to keywords")]
@@ -30,12 +32,6 @@ namespace Misaki.Modules
         public async Task Rule34(string param)
         {
             await ReplyAsync("Not yet implemented");
-        }
-
-        [Command("nsfw")]
-        public async Task SetNSFW(string channel, string enable)
-        {
-            
         }
     }
 }

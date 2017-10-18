@@ -32,5 +32,23 @@ namespace Misaki.Services
                 .WithFooter($"{animeResult.StartDate?.ToString("MMMM dd, yyyy")}   -   {animeResult.EndDate?.ToString("MMMM dd, yyyy")}")
                 .Build();
         }
+
+        public Embed FindAndFormatMangaResult(string mangaTitle)
+        {
+            var mangaResult = KitsuApi.GetManga.WithTitle(mangaTitle).Result().Result;
+            if (mangaResult == null) return new EmbedBuilder().WithTitle("Anime not found!").Build();
+            string description = TagMatcher.Replace(mangaResult.Synopsis, string.Empty);
+            System.Drawing.Color bestColor = Extensions.GetBestColor(mangaResult.Poster.MediumUrl);
+            Discord.Color bestDiscordColor = new Discord.Color(bestColor.R, bestColor.G, bestColor.B);
+            return new EmbedBuilder()
+                .WithThumbnailUrl(mangaResult.Poster.OriginalUrl)
+                .WithTitle(mangaResult.Titles.Romanized)
+                .WithDescription(new StringBuilder()
+                    .AppendLine(description)
+                    .ToString())
+                .WithColor(bestDiscordColor)
+                .WithFooter($"{mangaResult.StartDate?.ToString("MMMM dd, yyyy")}   -   {mangaResult.EndDate?.ToString("MMMM dd, yyyy")}")
+                .Build();
+        }
     }
 }

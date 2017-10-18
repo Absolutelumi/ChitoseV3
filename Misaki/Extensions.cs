@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -267,6 +270,25 @@ namespace Misaki
         public static Discord.Color GetRandomColor()
         {
             return new Discord.Color(rng.Next(0, 256), rng.Next(0, 256), rng.Next(0, 256));
+        }
+
+        public static MemoryStream GetNumberImage(int number)
+        {
+            var memStream = new MemoryStream();
+            Bitmap bitmap = new Bitmap(500, 500);
+            using (var graphics = Graphics.FromImage(bitmap))
+            {
+                Font font = new Font(new FontFamily("Calibri"), 100);
+                GraphicsPath numberPath = new GraphicsPath();
+                graphics.Clear(Color.Black);
+                numberPath.AddString(number.ToString(), font.FontFamily, (int)FontStyle.Regular, 200, new Point(100, 100), new StringFormat());
+                graphics.DrawPath(new Pen(Brushes.White), numberPath);
+                graphics.FillPath(Brushes.White, numberPath);
+                graphics.Save();
+            }
+            bitmap.Save(memStream, ImageFormat.Png);
+            memStream.Position = 0;
+            return memStream;
         }
     }
 }

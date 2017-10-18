@@ -49,7 +49,7 @@ namespace KitsuSharp.Queries
 }
 
 [DataContract]
-public class SearchResponse
+public class AnimeSearchResponse
 {
     public Anime[] Results => data;
 
